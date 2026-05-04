@@ -1,10 +1,10 @@
 // Environment variable validation
 const getEnvVar = (key: string, defaultValue?: string) => {
   const value = process.env[key]
-  if (!value && !defaultValue && process.env.NODE_ENV === 'production') {
+  if (!value && defaultValue === undefined && process.env.NODE_ENV === 'production') {
     throw new Error(`Missing required environment variable: ${key}`)
   }
-  return value || defaultValue || ''
+  return value ?? defaultValue ?? ''
 }
 
 export function validateEnv() {
