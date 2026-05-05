@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function TentangKamiPage() {
   return (
     <main className="bg-jena-charcoal min-h-screen">
-      <div className="max-w-2xl mx-auto px-5 sm:px-6 pt-[5rem] sm:pt-[7.5rem] lg:pt-32 pb-20">
+      <div className="max-w-2xl mx-auto px-5 sm:px-6 header-pt-page pb-20">
 
         <p className="text-jena-gold text-xs tracking-[0.25em] uppercase font-semibold mb-6">Tentang Kami</p>
 
