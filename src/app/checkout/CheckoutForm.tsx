@@ -305,8 +305,8 @@ export default function CheckoutForm({ variants, productName }: Props) {
                 <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Alamat Lengkap *</label>
                 <textarea name="address" required className="input-field min-h-[80px] resize-none" placeholder="Jl. Nama Jalan No. xx, RT/RW, Kelurahan, Kecamatan" />
               </div>
-              {/* City autocomplete */}
-              <div ref={cityDropdownRef} className="relative">
+              {/* City autocomplete - full width */}
+              <div ref={cityDropdownRef} className="relative sm:col-span-2">
                 <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Kota / Kecamatan *</label>
                 <div className="relative">
                   <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-jena-gray-medium pointer-events-none" />
@@ -317,7 +317,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
                     onFocus={() => areaResults.length > 0 && setShowAreaDropdown(true)}
                     required
                     className="input-field pl-9"
-                    placeholder="Ketik kota / kecamatan..."
+                    placeholder="Ketik kota / kecamatan untuk cari tarif pengiriman..."
                     autoComplete="off"
                   />
                   {isSearchingArea && (
@@ -346,7 +346,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
                   </div>
                 )}
                 {selectedArea && (
-                  <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                  <p className="text-xs text-green-600 mt-1.5 flex items-center gap-1">
                     <Check size={11} strokeWidth={3} /> {selectedArea.label}
                   </p>
                 )}
