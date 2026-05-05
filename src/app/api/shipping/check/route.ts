@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     const results = data.rajaongkir.results
 
     // Format response
-    const shippingOptions = results.flatMap((result: any) =>
+    const shippingOptions = results.flatMap((result: { code: string; name: string; costs: RajaOngkirCost[] }) =>
       result.costs.map((cost: RajaOngkirCost) => ({
         id: `${result.code}_${cost.service.toLowerCase()}`,
         courier: result.name,

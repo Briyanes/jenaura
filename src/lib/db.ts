@@ -54,7 +54,7 @@ export async function getProductsWithVariants() {
 }
 
 // Orders
-export async function createOrder(order: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) {
+export async function createOrder(order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) {
   const client = checkSupabase()
   const { data, error } = await client
     .from('orders')
@@ -77,7 +77,10 @@ export async function getOrderByOrderNumber(orderNumber: string) {
     .eq('order_number', orderNumber)
     .single()
 
-  if (error) throw error
+  if (error) {
+    if (error.code === 'PGRST116') return null // Not found
+    throw error
+  }
   return data
 }
 
@@ -109,7 +112,7 @@ export async function getOrders(limit = 50, offset = 0) {
 // Reviews
 export async function getApprovedReviews(productId?: string): Promise<Review[]> {
   const client = checkSupabase()
-  let query = client
+  const query = client
     .from('testimonials')
     .select('*')
     .eq('is_active', true)

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import crypto from 'crypto'
 import { env } from '@/lib/env-validation'
 
 export async function POST(request: NextRequest) {
@@ -77,34 +76,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Webhook handler for Midtrans notifications
-export async function PUT(request: NextRequest) {
-  try {
-    const body = await request.json()
-
-    // Verify signature
-    const signatureKey = crypto
-      .createHash('sha512')
-      .update(env.midtransServerKey + body.order_id + body.status_code + body.gross_amount)
-      .digest('hex')
-
-    if (signatureKey !== body.signature_key) {
-      return NextResponse.json(
-        { error: 'Invalid signature' },
-        { status: 403 }
-      )
-    }
-
-    // Update order status based on payment status
-    // You should implement this in your database
-    // await updateOrderPaymentStatus(body.order_id, body.transaction_status)
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Webhook error:', error)
-    return NextResponse.json(
-      { error: 'Webhook processing failed' },
-      { status: 500 }
-    )
-  }
-}
+// Webhook moved to /api/midtrans/notification — use that endpoint in Midtrans dashboard

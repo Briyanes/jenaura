@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import {
-  Sparkles, Droplets, Shield, Star,
+  Sparkles, Droplets, Star,
   ArrowRight, ChevronRight, Truck, RotateCcw,
   Heart, Hand, ArrowDown,
   Scissors, AlertCircle, Wind, Palette,
-  CheckCircle2, BadgeCheck, FlameKindling,
+  BadgeCheck, FlameKindling,
   ShoppingBag,
 } from 'lucide-react'
 import { HERO_PRODUCT, MOCK_FAQS } from '@/lib/mock-data'

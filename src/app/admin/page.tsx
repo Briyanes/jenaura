@@ -1,4 +1,5 @@
-import { DollarSign, ShoppingCart, Package, TrendingUp, Users } from 'lucide-react'
+import Link from 'next/link'
+import { DollarSign, ShoppingCart, Package, Users } from 'lucide-react'
 import { formatRupiah } from '@/lib/utils'
 
 const STATS = [
@@ -41,7 +42,7 @@ export default function AdminDashboard() {
       <div className="bg-white rounded-xl border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="font-semibold text-gray-900">Pesanan Terbaru</h2>
-          <a href="/admin/pesanan" className="text-xs text-jena-gold hover:underline">Lihat Semua</a>
+          <Link href="/admin/pesanan" className="text-xs text-jena-gold hover:underline">Lihat Semua</Link>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

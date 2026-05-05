@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Lock } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -27,7 +28,7 @@ export default function AdminLoginPage() {
       } else {
         toast.error('Password salah')
       }
-    } catch (error) {
+    } catch {
       toast.error('Terjadi kesalahan')
     } finally {
       setIsLoading(false)
@@ -71,12 +72,9 @@ export default function AdminLoginPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <a
-              href="/"
-              className="text-sm text-jena-gold hover:underline"
-            >
+            <Link href="/" className="text-sm text-jena-gold hover:underline">
               ← Kembali ke Website
-            </a>
+            </Link>
           </div>
         </div>
       </div>

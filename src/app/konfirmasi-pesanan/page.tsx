@@ -7,8 +7,13 @@ export const metadata: Metadata = {
   title: 'Pesanan Dikonfirmasi',
 }
 
-export default function OrderConfirmationPage({ searchParams }: { searchParams: { id?: string } }) {
-  const orderId = searchParams.id || 'PENDING'
+export default async function OrderConfirmationPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>
+}) {
+  const { id } = await searchParams
+  const orderId = id || 'PENDING'
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-jena-mocha to-jena-charcoal flex items-center justify-center header-pt lg:pt-16 pb-16 px-5 relative overflow-hidden">

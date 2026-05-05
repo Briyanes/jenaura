@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Landmark, QrCode, Wallet, Truck, Shield, Tag, X, ChevronDown, Check } from 'lucide-react'
+import { toast } from 'sonner'
+import { Landmark, QrCode, Wallet, Truck, Shield, Tag, Check } from 'lucide-react'
 import { HERO_PRODUCT, PRODUCT_VARIANTS, COURIER_OPTIONS, PAYMENT_METHODS } from '@/lib/mock-data'
 import { formatRupiah } from '@/lib/utils'
 import { trackInitiateCheckout, trackAddPaymentInfo, trackPurchase } from '@/lib/tracking'
@@ -27,6 +28,16 @@ export default function CheckoutForm() {
     e.preventDefault()
     setIsSubmitting(true)
 
+    const formData = new FormData(e.currentTarget)
+    const customerName = formData.get('name') as string
+    const rawPhone = formData.get('phone') as string
+    const address = formData.get('address') as string
+    const city = formData.get('city') as string
+    const postalCode = formData.get('postalCode') as string
+
+    // Normalize phone: 08xxx → 628xxx
+    const customerPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone
+
     trackInitiateCheckout({
       productId: HERO_PRODUCT.id,
       productName: HERO_PRODUCT.name,
@@ -41,19 +52,50 @@ export default function CheckoutForm() {
       paymentMethod: selectedPayment,
     })
 
-    // Simulate order creation
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName,
+          customerPhone,
+          address,
+          city,
+          postalCode,
+          courier: selectedCourier,
+          paymentMethod: selectedPayment,
+          promoCode: promoApplied ? promoCode : undefined,
+          items: [
+            {
+              productId: HERO_PRODUCT.id,
+              productName: HERO_PRODUCT.name,
+              price: variant.price,
+              quantity: variant.quantity,
+            },
+          ],
+          subtotal: variant.price,
+          shippingCost,
+          quantity: variant.quantity,
+        }),
+      })
 
-    const orderId = crypto.randomUUID()
-    trackPurchase({
-      orderId,
-      productId: HERO_PRODUCT.id,
-      productName: HERO_PRODUCT.name,
-      value: total,
-      numItems: variant.quantity,
-    })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Order failed')
 
-    router.push(`/konfirmasi-pesanan?id=${orderId}`)
+      const orderId = data.order?.order_number || crypto.randomUUID()
+      trackPurchase({
+        orderId,
+        productId: HERO_PRODUCT.id,
+        productName: HERO_PRODUCT.name,
+        value: total,
+        numItems: variant.quantity,
+      })
+
+      router.push(`/konfirmasi-pesanan?id=${orderId}`)
+    } catch {
+      toast.error('Gagal membuat pesanan. Silakan coba lagi.')
+      setIsSubmitting(false)
+    }
   }
 
   return (

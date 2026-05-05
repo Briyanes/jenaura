@@ -9,9 +9,20 @@ const RATE_WINDOW = 60_000 // 1 minute
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Admin route protection — redirect to login if no session cookie
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+    const sessionCookie = request.cookies.get('jenaura_admin_session')
+    if (!sessionCookie?.value) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
+    }
+  }
+
   // Rate limiting for API routes
   if (pathname.startsWith('/api/')) {
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    const ip =
+      request.headers.get('x-forwarded-for') ||
+      request.headers.get('x-real-ip') ||
+      'unknown'
     const now = Date.now()
     const record = rateLimitMap.get(ip)
 
@@ -24,7 +35,7 @@ export function proxy(request: NextRequest) {
       rateLimitMap.set(ip, { count: 1, lastReset: now })
     }
 
-    // Clean old entries every 100 requests
+    // Clean old entries to prevent memory leak
     if (rateLimitMap.size > 1000) {
       for (const [key, val] of rateLimitMap) {
         if (now - val.lastReset > RATE_WINDOW) rateLimitMap.delete(key)

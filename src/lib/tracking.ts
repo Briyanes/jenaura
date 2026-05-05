@@ -56,6 +56,7 @@ export function initTTPixel(pixelId: string) {
     'enableCookie',
     'disableCookie',
   ]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   w.ttq.setAndDefer = function (t: any, e: string) {
     t[e] = function () {
       // eslint-disable-next-line prefer-rest-params
@@ -66,22 +67,23 @@ export function initTTPixel(pixelId: string) {
     w.ttq.setAndDefer(w.ttq, w.ttq.methods[i])
   }
   w.ttq.instance = function (t: string) {
-    for (var e = w.ttq._i[t] || [], n = 0; n < w.ttq.methods.length; n++)
+    const e = w.ttq._i[t] || []
+    for (let n = 0; n < w.ttq.methods.length; n++)
       w.ttq.setAndDefer(e, w.ttq.methods[n])
     return e
   }
   w.ttq.load = function (t: string) {
-    var e = 'https://analytics.tiktok.com/i18n/pixel/events.js'
+    const e = 'https://analytics.tiktok.com/i18n/pixel/events.js'
     w.ttq._i = w.ttq._i || {}
     w.ttq._i[t] = []
     w.ttq._i[t]._u = e
     w.ttq._t = w.ttq._t || {}
     w.ttq._t[t] = +new Date()
-    var n = document.createElement('script')
+    const n = document.createElement('script')
     n.type = 'text/javascript'
     n.async = true
     n.src = e + '?sdkid=' + encodeURIComponent(t) + '&lib=' + encodeURIComponent('ttq')
-    var a = document.getElementsByTagName('script')[0]
+    const a = document.getElementsByTagName('script')[0]
     a.parentNode?.insertBefore(n, a)
   }
   w.ttq.load(pixelId)

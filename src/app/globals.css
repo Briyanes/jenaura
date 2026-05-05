@@ -447,3 +447,11 @@ html {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* --- Header Scroll State ---
+   Defined OUTSIDE @layer so it always wins over @layer utilities in dev + prod.
+   Fixes bg-white not showing in Turbopack dev mode (CSS cascade layer issue). */
+.header-nav-scrolled {
+  background-color: #ffffff;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.10);
+}

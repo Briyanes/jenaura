@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Check, ShoppingBag, ArrowRight } from 'lucide-react'
+import { Check, ShoppingBag } from 'lucide-react'
 import { formatRupiah } from '@/lib/utils'
 import type { Product } from '@/types'
 

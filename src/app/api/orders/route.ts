@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createOrder, getOrderByOrderNumber, getOrders } from '@/lib/db'
-import { env } from '@/lib/env-validation'
 import { validateOrderData } from '@/lib/validation'
 
 export async function POST(request: NextRequest) {
@@ -17,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if promo code is valid
-    let discountAmount = 0
+    const discountAmount = 0
     if (body.promoCode) {
       // You can add promo code validation here
       // For now, we'll skip this
@@ -55,9 +54,7 @@ export async function POST(request: NextRequest) {
         postalCode: body.postalCode,
       },
       promoCode: body.promoCode,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    } as any)
+    })
 
     return NextResponse.json({ success: true, order }, { status: 201 })
   } catch (error) {

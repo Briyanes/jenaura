@@ -19,7 +19,7 @@ export const orderSchema = z.object({
 
 export type OrderInput = z.infer<typeof orderSchema>
 
-export function validateOrderData(data: any) {
+export function validateOrderData(data: Record<string, unknown>) {
   try {
     const validated = orderSchema.parse(data)
     return { success: true, data: validated }

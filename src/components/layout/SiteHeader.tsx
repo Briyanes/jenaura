@@ -91,9 +91,7 @@ export default function SiteHeader() {
         {/* Navbar — transparent → solid white */}
         <nav
           className={`w-full transition-all duration-300 ${
-            scrolled
-              ? 'bg-white shadow-[0_2px_20px_rgba(0,0,0,0.10)]'
-              : 'bg-transparent'
+            scrolled ? 'header-nav-scrolled' : 'bg-transparent'
           }`}
         >
           <div className="mx-auto max-w-7xl px-4 lg:px-8 flex items-center justify-between h-16">
