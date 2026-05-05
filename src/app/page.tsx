@@ -10,8 +10,47 @@ import {
 import { HERO_PRODUCT, MOCK_FAQS } from '@/lib/mock-data'
 import { formatRupiah } from '@/lib/utils'
 import { PricingCarousel } from '@/components/PricingCarousel'
+import { getFirstActiveProductFull } from '@/lib/db'
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Try to fetch live product data from Supabase; fallback to mock-data
+  let product = HERO_PRODUCT
+  let carouselProps: { variants?: { name: string; quantity: number; price: number; saveAmount: number }[]; productSlug?: string; productImage?: string } = {}
+
+  try {
+    const dbProduct = await getFirstActiveProductFull()
+    if (dbProduct) {
+      product = {
+        ...HERO_PRODUCT,
+        id: dbProduct.id,
+        name: dbProduct.name,
+        slug: dbProduct.slug,
+        description: dbProduct.description || HERO_PRODUCT.description,
+        price: dbProduct.price,
+        comparePrice: dbProduct.compare_price ?? HERO_PRODUCT.comparePrice,
+        stock: dbProduct.stock,
+        images: (dbProduct.images as string[])?.length ? (dbProduct.images as string[]) : HERO_PRODUCT.images,
+        weight: dbProduct.weight || HERO_PRODUCT.weight,
+      }
+      carouselProps.productSlug = dbProduct.slug
+      carouselProps.productImage = (dbProduct.images as string[])?.[0] || HERO_PRODUCT.images[0]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const activeVariants = ((dbProduct as any).product_variants as any[] || [])
+        .filter((v: { is_active: boolean }) => v.is_active)
+        .sort((a: { quantity: number }, b: { quantity: number }) => a.quantity - b.quantity)
+      if (activeVariants.length) {
+        carouselProps.variants = activeVariants.map((v: { name: string; quantity: number; price: number; save_amount?: number }) => ({
+          name: v.name,
+          quantity: v.quantity,
+          price: v.price,
+          saveAmount: v.save_amount || 0,
+        }))
+      }
+    }
+  } catch {
+    // silently fall back to mock-data
+  }
+
   return (
     <main>
 
@@ -57,14 +96,14 @@ export default function HomePage() {
               {/* Price Box */}
               <div className="inline-flex items-center gap-4 justify-center lg:justify-start mb-8 bg-white/8 backdrop-blur-md rounded-2xl px-6 py-4 border border-white/15">
                 <span className="text-3xl sm:text-4xl font-extrabold text-white">
-                  {formatRupiah(HERO_PRODUCT.price)}
+                  {formatRupiah(product.price)}
                 </span>
-                {HERO_PRODUCT.comparePrice && (
+                {product.comparePrice && (
                   <div className="flex flex-col gap-1">
-                    <span className="text-xs text-white/40 line-through">{formatRupiah(HERO_PRODUCT.comparePrice)}</span>
+                    <span className="text-xs text-white/40 line-through">{formatRupiah(product.comparePrice)}</span>
                     <span className="text-[11px] font-bold text-jena-mocha bg-gradient-to-r from-jena-gold to-jena-peach px-2.5 py-1 rounded-full inline-flex items-center gap-1">
                       <Sparkles size={10} />
-                      HEMAT {Math.round(((HERO_PRODUCT.comparePrice - HERO_PRODUCT.price) / HERO_PRODUCT.comparePrice) * 100)}%
+                      HEMAT {Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100)}%
                     </span>
                   </div>
                 )}
@@ -81,7 +120,7 @@ export default function HomePage() {
                   <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
-                  href={`/produk/${HERO_PRODUCT.slug}`}
+                  href={`/produk/${product.slug}`}
                   className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 text-white px-5 py-3 rounded-full text-xs sm:text-sm font-semibold hover:bg-white/18 transition-all duration-300 flex-1 sm:flex-none whitespace-nowrap"
                 >
                   Lihat Detail
@@ -101,7 +140,7 @@ export default function HomePage() {
                     <div className="h-px w-20 bg-gradient-to-r from-transparent via-jena-gold to-transparent mx-auto" />
                   </div>
                   <p className="text-sm text-white/50 tracking-[0.18em] font-medium">Keratin Treatment</p>
-                  <p className="text-xs text-white/30 tracking-wider">{HERO_PRODUCT.weight}</p>
+                  <p className="text-xs text-white/30 tracking-wider">{product.weight}</p>
                   <div className="h-px w-16 bg-jena-gold/30 mx-auto mt-4" />
                   <p className="text-xs text-white/30 font-medium mt-3">Leave-in · No Rinse</p>
                 </div>
@@ -213,7 +252,7 @@ export default function HomePage() {
 
           {/* Steps — horizontal on desktop, vertical on mobile */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto mb-8">
-            {HERO_PRODUCT.howToUse.map((step, i) => {
+            {product.howToUse.map((step, i) => {
               const icons = [Droplets, Hand, ArrowDown, Sparkles]
               const IconComponent = icons[i]
               return (
@@ -259,11 +298,11 @@ export default function HomePage() {
           <div className="text-center max-w-2xl mx-auto mb-8">
             <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-3 font-bold">Pilih Paket</p>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white mb-4 font-bold">
-              Mulai dari <span className="text-jena-gold">{formatRupiah(HERO_PRODUCT.price)}</span>
+              Mulai dari <span className="text-jena-gold">{formatRupiah(product.price)}</span>
             </h2>
             <p className="text-sm text-white/40">Hemat lebih banyak dengan paket bundling.</p>
           </div>
-          <PricingCarousel />
+          <PricingCarousel {...carouselProps} />
         </div>
       </section>
 
@@ -335,7 +374,7 @@ export default function HomePage() {
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-jena-gold to-jena-gold-dark text-white px-8 py-4 rounded-full text-sm sm:text-base font-bold shadow-xl shadow-jena-gold/30 hover:scale-105 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap w-full lg:w-auto"
               >
                 <ShoppingBag size={18} />
-                Beli Sekarang — {formatRupiah(HERO_PRODUCT.price)}
+                Beli Sekarang — {formatRupiah(product.price)}
               </Link>
             </div>
 

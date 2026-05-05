@@ -53,6 +53,46 @@ export async function getProductsWithVariants() {
   return data
 }
 
+// Fetch full product with variants + hero_ingredients by slug
+export async function getProductFullBySlug(slug: string) {
+  const client = checkSupabase()
+  const { data, error } = await client
+    .from('products')
+    .select(`
+      *,
+      product_variants(*),
+      hero_ingredients(*)
+    `)
+    .eq('slug', slug)
+    .eq('is_active', true)
+    .single()
+
+  if (error) {
+    if (error.code === 'PGRST116') return null
+    return null
+  }
+  return data
+}
+
+// Fetch first active product with variants + hero_ingredients (for homepage)
+export async function getFirstActiveProductFull() {
+  const client = checkSupabase()
+  const { data, error } = await client
+    .from('products')
+    .select(`
+      *,
+      product_variants(*),
+      hero_ingredients(*)
+    `)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (error) return null
+  return data
+}
+
 // Orders
 export async function createOrder(order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) {
   const client = checkSupabase()

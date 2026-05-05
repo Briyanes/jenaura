@@ -1,23 +1,78 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Check, Truck, Shield, RotateCcw, Sparkles, Droplets, Leaf, ArrowLeft } from 'lucide-react'
 import { HERO_PRODUCT, PRODUCT_VARIANTS } from '@/lib/mock-data'
 import { formatRupiah } from '@/lib/utils'
+import { getProductFullBySlug } from '@/lib/db'
 import ProductClientActions from './ProductClientActions'
+import type { Product } from '@/types'
 
-export function generateMetadata(): Metadata {
+type Variant = { name: string; quantity: number; price: number; saveAmount: number }
+
+async function resolveProduct(slug: string): Promise<{ product: Product; variants: Variant[] }> {
+  try {
+    const dbProduct = await getProductFullBySlug(slug)
+    if (dbProduct) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const dbVariants = ((dbProduct as any).product_variants as any[] || [])
+        .filter((v: { is_active: boolean }) => v.is_active)
+        .sort((a: { quantity: number }, b: { quantity: number }) => a.quantity - b.quantity)
+        .map((v: { name: string; quantity: number; price: number; save_amount?: number }) => ({
+          name: v.name, quantity: v.quantity, price: v.price, saveAmount: v.save_amount || 0,
+        }))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const dbIngredients = ((dbProduct as any).hero_ingredients as any[] || [])
+        .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)
+        .map((i: { id: string; name: string; description: string }) => ({
+          id: i.id, name: i.name, description: i.description, icon: 'sparkles',
+        }))
+      const product: Product = {
+        ...HERO_PRODUCT,
+        id: dbProduct.id,
+        name: dbProduct.name,
+        slug: dbProduct.slug,
+        description: dbProduct.description || HERO_PRODUCT.description,
+        price: dbProduct.price,
+        comparePrice: (dbProduct as { compare_price?: number }).compare_price ?? HERO_PRODUCT.comparePrice,
+        stock: dbProduct.stock,
+        images: (dbProduct.images as string[])?.length ? (dbProduct.images as string[]) : HERO_PRODUCT.images,
+        weight: dbProduct.weight || HERO_PRODUCT.weight,
+        heroIngredients: dbIngredients.length ? dbIngredients : HERO_PRODUCT.heroIngredients,
+        isActive: dbProduct.is_active,
+        createdAt: dbProduct.created_at,
+      }
+      return { product, variants: dbVariants.length ? dbVariants : PRODUCT_VARIANTS }
+    }
+  } catch {
+    // fall through
+  }
+  // Fallback: check if slug matches mock product
+  if (slug === HERO_PRODUCT.slug) {
+    return { product: HERO_PRODUCT, variants: PRODUCT_VARIANTS }
+  }
+  return { product: HERO_PRODUCT, variants: PRODUCT_VARIANTS }
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const { product } = await resolveProduct(slug)
   return {
-    title: HERO_PRODUCT.name,
-    description: HERO_PRODUCT.shortDescription,
+    title: product.name,
+    description: product.shortDescription,
     openGraph: {
-      title: `${HERO_PRODUCT.name} | JENAURA`,
-      description: HERO_PRODUCT.shortDescription,
+      title: `${product.name} | JENAURA`,
+      description: product.shortDescription,
     },
   }
 }
 
-export default function ProductDetailPage() {
-  const product = HERO_PRODUCT
+export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const { product, variants } = await resolveProduct(slug)
+
+  // If slug doesn't match any known product and DB returned nothing, 404
+  if (!product) notFound()
 
   return (
     <main>
@@ -75,7 +130,7 @@ export default function ProductDetailPage() {
 
               <p className="text-sm text-white/60 leading-relaxed mb-6">{product.description}</p>
 
-              <ProductClientActions product={product} variants={PRODUCT_VARIANTS} />
+              <ProductClientActions product={product} variants={variants} />
 
               <div className="grid grid-cols-3 gap-2 mt-6">
                 {[
@@ -119,7 +174,7 @@ export default function ProductDetailPage() {
           <h2 className="font-display text-xl sm:text-2xl text-white font-bold mb-4">Hero Ingredients</h2>
           <div className="flex gap-3 overflow-x-auto snap-x scrollbar-hide pb-2 sm:grid sm:grid-cols-3 mb-4">
             {product.heroIngredients.map((ing, i) => {
-              const IconComponent = [Sparkles, Droplets, Leaf][i]
+              const IconComponent = [Sparkles, Droplets, Leaf][i % 3]
               return (
                 <div key={ing.id} className="w-[72vw] max-w-[260px] flex-shrink-0 snap-start sm:w-auto sm:max-w-none bg-white/[0.05] border border-white/[0.08] rounded-2xl p-5 hover:border-jena-gold/30 transition-all">
                   <div className="w-10 h-10 mb-3 rounded-xl bg-jena-gold/10 border border-jena-gold/15 flex items-center justify-center">
@@ -141,3 +196,4 @@ export default function ProductDetailPage() {
     </main>
   )
 }
+
