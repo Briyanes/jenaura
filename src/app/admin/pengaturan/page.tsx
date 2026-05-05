@@ -1,115 +1,115 @@
 'use client'
 
 import { useState } from 'react'
-import { Save, Eye, EyeOff, TestTube, CreditCard, Truck } from 'lucide-react'
+import { Eye, EyeOff, CreditCard, Truck, MessageCircle, BarChart2, Database, KeyRound } from 'lucide-react'
+
+interface SettingSection {
+  title: string
+  icon: React.ReactNode
+  fields: { label: string; key: string; type: string; placeholder: string }[]
+}
+
+const SECTIONS: SettingSection[] = [
+  {
+    title: 'Midtrans Payment Gateway',
+    icon: <CreditCard size={16} className="text-jena-gold" />,
+    fields: [
+      { label: 'Server Key', key: 'midtrans_server', type: 'password', placeholder: 'SB-Mid-server-...' },
+      { label: 'Client Key', key: 'midtrans_client', type: 'text', placeholder: 'SB-Mid-client-...' },
+    ],
+  },
+  {
+    title: 'RajaOngkir (Ongkos Kirim)',
+    icon: <Truck size={16} className="text-jena-gold" />,
+    fields: [
+      { label: 'API Key', key: 'rajaongkir_key', type: 'password', placeholder: 'API key RajaOngkir' },
+      { label: 'Kota Asal', key: 'rajaongkir_city', type: 'text', placeholder: 'Contoh: Jakarta' },
+    ],
+  },
+  {
+    title: 'WhatsApp (Fonnte)',
+    icon: <MessageCircle size={16} className="text-jena-gold" />,
+    fields: [
+      { label: 'API Key', key: 'fonnte_key', type: 'password', placeholder: 'Token Fonnte' },
+      { label: 'Nomor WhatsApp', key: 'wa_number', type: 'text', placeholder: '6281234567890' },
+    ],
+  },
+  {
+    title: 'Pixel & Analytics',
+    icon: <BarChart2 size={16} className="text-jena-gold" />,
+    fields: [
+      { label: 'Facebook Pixel ID', key: 'fb_pixel', type: 'text', placeholder: '123456789012345' },
+      { label: 'TikTok Pixel ID', key: 'tt_pixel', type: 'text', placeholder: 'C4XXXXXXXXXXXXX' },
+      { label: 'Google Analytics ID', key: 'ga_id', type: 'text', placeholder: 'G-XXXXXXXXXX' },
+    ],
+  },
+]
 
 export default function AdminPengaturanPage() {
-  const [showSecret, setShowSecret] = useState(false)
+  const [showKeys, setShowKeys] = useState<Record<string, boolean>>({})
+
+  function toggleShow(key: string) {
+    setShowKeys((prev) => ({ ...prev, [key]: !prev[key] }))
+  }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Pengaturan & Integrasi</h1>
+    <div className="space-y-6 max-w-3xl">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Pengaturan</h1>
+        <p className="text-sm text-gray-400 mt-1">Konfigurasi integrasi dan API keys. Simpan perubahan melalui Vercel Environment Variables.</p>
+      </div>
 
-      {/* Midtrans */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <CreditCard size={18} className="text-jena-gold" />
-          Midtrans Payment Gateway
+      {/* Info banner */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+        <KeyRound size={16} className="text-amber-600 mt-0.5 flex-shrink-0" />
+        <p className="text-xs text-amber-700 leading-relaxed">
+          API keys disimpan sebagai <strong>Environment Variables di Vercel</strong>, bukan di database. Halaman ini hanya referensi. Untuk mengubah nilai, pergi ke <strong>Vercel Dashboard → Settings → Environment Variables</strong>.
+        </p>
+      </div>
+
+      {SECTIONS.map((section) => (
+        <div key={section.title} className="bg-white rounded-xl border border-gray-200 p-5">
+          <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2 text-sm">
+            {section.icon}
+            {section.title}
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {section.fields.map((field) => (
+              <div key={field.key}>
+                <label className="text-xs font-medium text-gray-500 mb-1.5 block">{field.label}</label>
+                <div className="relative">
+                  <input
+                    type={field.type === 'password' && !showKeys[field.key] ? 'password' : 'text'}
+                    placeholder={field.placeholder}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm pr-9 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-jena-gold/40"
+                  />
+                  {field.type === 'password' && (
+                    <button
+                      type="button"
+                      onClick={() => toggleShow(field.key)}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showKeys[field.key] ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {/* Supabase status */}
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <h2 className="font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm">
+          <Database size={16} className="text-jena-gold" />
+          Supabase Database
         </h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Server Key</label>
-            <div className="relative">
-              <input type={showSecret ? 'text' : 'password'} defaultValue="SB-Mid-server-xxx" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm pr-10" />
-              <button type="button" onClick={() => setShowSecret(!showSecret)} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400">
-                {showSecret ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          </div>
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Client Key</label>
-            <input type="text" defaultValue="SB-Mid-client-xxx" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Environment</label>
-            <select className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
-              <option>Sandbox</option>
-              <option>Production</option>
-            </select>
-          </div>
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-green-400 inline-block" />
+          <span className="text-sm text-gray-600">Terhubung via Vercel Environment Variables</span>
         </div>
-      </div>
-
-      {/* RajaOngkir */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <Truck size={18} className="text-jena-gold" />
-          RajaOngkir API
-        </h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">API Key</label>
-            <input type="password" defaultValue="rajaongkir-api-key" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Kota Asal</label>
-            <input type="text" defaultValue="Jakarta" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-        </div>
-      </div>
-
-      {/* Fonnte (WhatsApp) */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="font-semibold text-gray-900 mb-4">💬 Fonnte (WhatsApp API)</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">API Key</label>
-            <input type="password" defaultValue="fonnte-api-key" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Nomor WhatsApp</label>
-            <input type="text" defaultValue="6281234567890" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-        </div>
-      </div>
-
-      {/* Pixel Tracking */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="font-semibold text-gray-900 mb-4">📊 Pixel Tracking</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Facebook Pixel ID</label>
-            <input type="text" placeholder="Masukkan Pixel ID" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">TikTok Pixel ID</label>
-            <input type="text" placeholder="Masukkan Pixel ID" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-        </div>
-      </div>
-
-      {/* Supabase */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h2 className="font-semibold text-gray-900 mb-4">🗄️ Supabase Database</h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Supabase URL</label>
-            <input type="text" placeholder="https://xxx.supabase.co" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Anon Key</label>
-            <input type="password" placeholder="eyJ..." className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" />
-          </div>
-        </div>
-      </div>
-
-      <div className="flex gap-3">
-        <button className="inline-flex items-center gap-2 bg-jena-gold text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-jena-gold/90">
-          <Save size={16} /> Simpan Pengaturan
-        </button>
-        <button className="inline-flex items-center gap-2 border border-gray-200 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50">
-          <TestTube size={16} /> Test Koneksi
-        </button>
+        <p className="text-xs text-gray-400 mt-2">NEXT_PUBLIC_SUPABASE_URL · NEXT_PUBLIC_SUPABASE_ANON_KEY · SUPABASE_SERVICE_ROLE_KEY</p>
       </div>
     </div>
   )
