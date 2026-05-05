@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
 import { Toaster } from 'sonner'
-import SiteHeader from '@/components/layout/SiteHeader'
-import Footer from '@/components/layout/Footer'
-import WhatsAppButton from '@/components/layout/WhatsAppButton'
+import PublicShell from '@/components/layout/PublicShell'
 import PixelProvider from '@/components/PixelProvider'
 import './globals.css'
 
@@ -70,11 +68,7 @@ export default function RootLayout({
       className={`${cormorant.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-jena-ivory">
-        {/* SiteHeader is position:fixed — no spacer needed, hero fills behind it */}
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <PublicShell>{children}</PublicShell>
         <PixelProvider />
         <Toaster
           position="top-center"
