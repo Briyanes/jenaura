@@ -1,28 +1,103 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { Landmark, QrCode, Wallet, Truck, Shield, Tag, Check } from 'lucide-react'
-import { HERO_PRODUCT, PRODUCT_VARIANTS, COURIER_OPTIONS, PAYMENT_METHODS } from '@/lib/mock-data'
+import { Landmark, QrCode, Wallet, Truck, Shield, Tag, Check, X } from 'lucide-react'
+import { HERO_PRODUCT, COURIER_OPTIONS, PAYMENT_METHODS } from '@/lib/mock-data'
 import { formatRupiah } from '@/lib/utils'
 import { trackInitiateCheckout, trackAddPaymentInfo, trackPurchase } from '@/lib/tracking'
+import type { CheckoutVariant } from './page'
 
-export default function CheckoutForm() {
+interface Props {
+  variants: CheckoutVariant[]
+  productName: string
+}
+
+export default function CheckoutForm({ variants, productName }: Props) {
   const router = useRouter()
-  const [selectedVariant, setSelectedVariant] = useState(2)
+  const searchParams = useSearchParams()
+
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(() =>
+    variants.length >= 3 ? 2 : variants.length - 1
+  )
   const [selectedCourier, setSelectedCourier] = useState('jne_reg')
   const [selectedPayment, setSelectedPayment] = useState('bank_transfer')
   const [promoCode, setPromoCode] = useState('')
   const [promoApplied, setPromoApplied] = useState(false)
+  const [promoDiscount, setPromoDiscount] = useState(0)
+  const [promoId, setPromoId] = useState<string | undefined>()
+  const [promoMessage, setPromoMessage] = useState('')
+  const [isApplyingPromo, setIsApplyingPromo] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const variant = PRODUCT_VARIANTS[selectedVariant]
+  const variant = variants[selectedVariantIdx] || variants[0]
   const courier = COURIER_OPTIONS.find(c => c.id === selectedCourier)!
   const isFreeShipping = variant.quantity >= 2
   const shippingCost = isFreeShipping ? 0 : courier.price
-  const discountAmount = promoApplied ? 15000 : 0
-  const total = variant.price + shippingCost - discountAmount
+  const total = variant.price + shippingCost - promoDiscount
+
+  // Capture UTM params on mount
+  const utmSource = searchParams.get('utm_source') || (typeof window !== 'undefined' ? sessionStorage.getItem('utm_source') : null) || undefined
+  const utmMedium = searchParams.get('utm_medium') || (typeof window !== 'undefined' ? sessionStorage.getItem('utm_medium') : null) || undefined
+  const utmCampaign = searchParams.get('utm_campaign') || (typeof window !== 'undefined' ? sessionStorage.getItem('utm_campaign') : null) || undefined
+
+  useEffect(() => {
+    // Persist UTM params to sessionStorage
+    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']
+    utmKeys.forEach(key => {
+      const val = searchParams.get(key)
+      if (val) sessionStorage.setItem(key, val)
+    })
+  }, [searchParams])
+
+  // Reset promo discount when variant changes (subtotal changes)
+  useEffect(() => {
+    if (promoApplied) {
+      setPromoApplied(false)
+      setPromoDiscount(0)
+      setPromoMessage('')
+      setPromoId(undefined)
+      toast.info('Pilih ulang varian — promo direset')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVariantIdx])
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return
+    setIsApplyingPromo(true)
+    try {
+      const res = await fetch('/api/promo/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: promoCode.trim(), subtotal: variant.price }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        toast.error(data.error || 'Kode promo tidak valid')
+        setPromoApplied(false)
+        setPromoDiscount(0)
+      } else {
+        setPromoApplied(true)
+        setPromoDiscount(data.discount || 0)
+        setPromoId(data.promoId)
+        setPromoMessage(data.message || 'Promo diterapkan')
+        toast.success(data.message || 'Promo berhasil diterapkan')
+      }
+    } catch {
+      toast.error('Gagal memvalidasi promo')
+    } finally {
+      setIsApplyingPromo(false)
+    }
+  }
+
+  const handleRemovePromo = () => {
+    setPromoApplied(false)
+    setPromoDiscount(0)
+    setPromoMessage('')
+    setPromoId(undefined)
+    setPromoCode('')
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -34,20 +109,21 @@ export default function CheckoutForm() {
     const address = formData.get('address') as string
     const city = formData.get('city') as string
     const postalCode = formData.get('postalCode') as string
+    const notes = formData.get('notes') as string
 
     // Normalize phone: 08xxx → 628xxx
     const customerPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone
 
     trackInitiateCheckout({
       productId: HERO_PRODUCT.id,
-      productName: HERO_PRODUCT.name,
+      productName,
       value: total,
       numItems: variant.quantity,
     })
 
     trackAddPaymentInfo({
       productId: HERO_PRODUCT.id,
-      productName: HERO_PRODUCT.name,
+      productName,
       value: total,
       paymentMethod: selectedPayment,
     })
@@ -62,36 +138,36 @@ export default function CheckoutForm() {
           address,
           city,
           postalCode,
+          notes: notes || undefined,
+          variantId: variant.id || undefined,
+          variantName: variant.name,
+          quantity: variant.quantity,
           courier: selectedCourier,
           paymentMethod: selectedPayment,
-          promoCode: promoApplied ? promoCode : undefined,
-          items: [
-            {
-              productId: HERO_PRODUCT.id,
-              productName: HERO_PRODUCT.name,
-              price: variant.price,
-              quantity: variant.quantity,
-            },
-          ],
           subtotal: variant.price,
           shippingCost,
-          quantity: variant.quantity,
+          discountAmount: promoDiscount,
+          promoCode: promoApplied ? promoCode : undefined,
+          promoId: promoId || undefined,
+          utmSource,
+          utmMedium,
+          utmCampaign,
         }),
       })
 
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Order failed')
 
-      const orderId = data.order?.order_number || crypto.randomUUID()
+      const orderId = data.order?.order_number || 'PENDING'
       trackPurchase({
         orderId,
         productId: HERO_PRODUCT.id,
-        productName: HERO_PRODUCT.name,
+        productName,
         value: total,
         numItems: variant.quantity,
       })
 
-      router.push(`/konfirmasi-pesanan?id=${orderId}`)
+      router.push(`/konfirmasi-pesanan?id=${encodeURIComponent(orderId)}`)
     } catch {
       toast.error('Gagal membuat pesanan. Silakan coba lagi.')
       setIsSubmitting(false)
@@ -128,7 +204,11 @@ export default function CheckoutForm() {
               </div>
               <div>
                 <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Kode Pos *</label>
-                <input type="text" name="postalCode" required className="input-field" placeholder="12345" />
+                <input type="text" name="postalCode" required pattern="\d{5}" className="input-field" placeholder="12345" />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Catatan (opsional)</label>
+                <input type="text" name="notes" className="input-field" placeholder="Mis: titip ke satpam, jangan diketuk, dll." />
               </div>
             </div>
           </div>
@@ -154,11 +234,16 @@ export default function CheckoutForm() {
                     </div>
                   </div>
                   <span className="text-sm font-semibold text-jena-mocha">
-                    {isFreeShipping ? <span className="text-green-600">GRATIS</span> : formatRupiah(opt.price)}
+                    {isFreeShipping ? <span className="text-green-600 text-xs font-bold">GRATIS</span> : formatRupiah(opt.price)}
                   </span>
                 </button>
               ))}
             </div>
+            {isFreeShipping && (
+              <p className="text-xs text-green-600 mt-3 flex items-center gap-1">
+                <Check size={12} strokeWidth={3} /> Gratis ongkir untuk pembelian 2 tube atau lebih!
+              </p>
+            )}
           </div>
 
           {/* Payment */}
@@ -200,53 +285,67 @@ export default function CheckoutForm() {
                 <span className="text-xs font-bold text-jena-gold">JEN</span>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-jena-charcoal">{HERO_PRODUCT.name}</p>
-                <p className="text-xs text-jena-gray-medium">{variant.name}</p>
+                <p className="text-sm font-medium text-jena-charcoal leading-tight">{productName}</p>
+                <p className="text-xs text-jena-gray-medium mt-0.5">{variant?.name}</p>
               </div>
             </div>
 
-            {/* Variant Quick Select */}
+            {/* Variant Select */}
             <div className="py-4 border-b border-jena-gray-light space-y-2">
-              {PRODUCT_VARIANTS.map((v, i) => (
+              {variants.map((v, i) => (
                 <button
                   key={i}
                   type="button"
-                  onClick={() => setSelectedVariant(i)}
-                  className={`w-full flex justify-between text-sm p-2 rounded-lg transition-colors ${
-                    selectedVariant === i ? 'bg-jena-gold/10 text-jena-mocha font-semibold' : 'text-jena-charcoal/60 hover:bg-jena-ivory'
+                  onClick={() => setSelectedVariantIdx(i)}
+                  className={`w-full flex justify-between items-center text-sm p-2.5 rounded-lg transition-colors ${
+                    selectedVariantIdx === i ? 'bg-jena-gold/10 text-jena-mocha font-semibold' : 'text-jena-charcoal/60 hover:bg-jena-ivory'
                   }`}
                 >
                   <span>{v.name}</span>
-                  <span>{formatRupiah(v.price)}</span>
+                  <div className="text-right">
+                    <span className={selectedVariantIdx === i ? 'text-jena-mocha' : ''}>{formatRupiah(v.price)}</span>
+                    {v.saveAmount > 0 && (
+                      <span className="block text-[10px] text-green-600">hemat {formatRupiah(v.saveAmount)}</span>
+                    )}
+                  </div>
                 </button>
               ))}
             </div>
 
             {/* Promo Code */}
             <div className="py-4 border-b border-jena-gray-light">
-              <div className="flex gap-2">
-                <div className="flex-1 relative">
-                  <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-jena-gray-medium" />
-                  <input
-                    type="text"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    placeholder="Kode promo"
-                    className="input-field pl-9 text-sm"
-                  />
+              {promoApplied ? (
+                <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                  <div className="flex items-center gap-2 text-green-700">
+                    <Check size={14} strokeWidth={3} />
+                    <span className="text-xs font-medium">{promoMessage}</span>
+                  </div>
+                  <button type="button" onClick={handleRemovePromo} className="text-green-600 hover:text-red-500 transition-colors">
+                    <X size={14} />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => { if (promoCode) setPromoApplied(!promoApplied) }}
-                  className="btn-ghost text-jena-gold text-xs px-3"
-                >
-                  {promoApplied ? 'Batal' : 'Pakai'}
-                </button>
-              </div>
-              {promoApplied && (
-                <p className="text-xs text-green-600 mt-2 flex items-center gap-1">
-                  <Check size={12} strokeWidth={3} /> Promo diterapkan — Hemat {formatRupiah(discountAmount)}
-                </p>
+              ) : (
+                <div className="flex gap-2">
+                  <div className="flex-1 relative">
+                    <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-jena-gray-medium" />
+                    <input
+                      type="text"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleApplyPromo())}
+                      placeholder="Kode promo"
+                      className="input-field pl-9 text-sm uppercase"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleApplyPromo}
+                    disabled={isApplyingPromo || !promoCode.trim()}
+                    className="btn-ghost text-jena-gold text-xs px-3 disabled:opacity-40"
+                  >
+                    {isApplyingPromo ? '...' : 'Pakai'}
+                  </button>
+                </div>
               )}
             </div>
 
@@ -260,10 +359,10 @@ export default function CheckoutForm() {
                 <span>Ongkos Kirim</span>
                 <span>{isFreeShipping ? <span className="text-green-600">GRATIS</span> : formatRupiah(shippingCost)}</span>
               </div>
-              {promoApplied && (
+              {promoDiscount > 0 && (
                 <div className="flex justify-between text-green-600">
-                  <span>Diskon</span>
-                  <span>-{formatRupiah(discountAmount)}</span>
+                  <span>Diskon Promo</span>
+                  <span>-{formatRupiah(promoDiscount)}</span>
                 </div>
               )}
               <hr className="border-jena-gray-light" />
@@ -280,12 +379,15 @@ export default function CheckoutForm() {
               className="btn-primary w-full text-base mt-4"
             >
               {isSubmitting ? (
-                <span className="flex items-center gap-2">
-                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" /></svg>
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
                   Memproses...
                 </span>
               ) : (
-                'Bayar Sekarang'
+                'Pesan Sekarang'
               )}
             </button>
 

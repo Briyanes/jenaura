@@ -94,13 +94,15 @@ export interface ShippingAddress {
 export interface PromoCode {
   id: string
   code: string
-  type: 'percentage' | 'fixed' | 'free_shipping'
+  type: 'fixed' | 'percent' | 'shipping'
   value: number
-  minOrder?: number
-  maxUses?: number
-  usedCount: number
-  isActive: boolean
-  expiresAt?: string
+  min_order: number
+  max_uses?: number
+  used_count: number
+  is_active: boolean
+  starts_at?: string
+  expires_at?: string
+  created_at: string
 }
 
 export interface FAQ {

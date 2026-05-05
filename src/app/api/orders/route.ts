@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    // Validate order data
     const validationResult = validateOrderData(body)
     if (!validationResult.success) {
       return NextResponse.json(
@@ -15,46 +14,61 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if promo code is valid
-    const discountAmount = 0
-    if (body.promoCode) {
-      // You can add promo code validation here
-      // For now, we'll skip this
-    }
-
-    // Calculate totals
     const shippingCost = body.shippingCost || 0
+    const discountAmount = body.discountAmount || 0
     const subtotal = body.subtotal
     const total = subtotal + shippingCost - discountAmount
 
-    // Create order
     const order = await createOrder({
-      customer: {
-        id: crypto.randomUUID(),
-        name: body.customerName,
-        phone: body.customerPhone,
-        email: body.customerEmail,
-        createdAt: new Date().toISOString(),
-      },
-      items: body.items,
+      customer_name: body.customerName,
+      customer_phone: body.customerPhone,
+      customer_email: body.customerEmail || null,
+      shipping_address: body.address,
+      city: body.city,
+      postal_code: body.postalCode,
+      notes: body.notes || null,
+      variant_id: body.variantId || null,
+      quantity: body.quantity || 1,
       subtotal,
-      shippingCost,
-      discountAmount,
+      shipping_cost: shippingCost,
+      discount_amount: discountAmount,
       total,
-      paymentMethod: body.paymentMethod,
-      paymentStatus: 'pending',
-      status: 'pending',
       courier: body.courier,
-      shippingAddress: {
-        name: body.customerName,
-        phone: body.customerPhone,
-        address: body.address,
-        city: body.city,
-        district: body.district || '',
-        postalCode: body.postalCode,
-      },
-      promoCode: body.promoCode,
+      payment_method: body.paymentMethod,
+      payment_status: 'unpaid',
+      status: 'pending',
+      utm_source: body.utmSource || null,
+      utm_medium: body.utmMedium || null,
+      utm_campaign: body.utmCampaign || null,
     })
+
+    // Fire-and-forget: WhatsApp notification to admin
+    try {
+      const baseUrl = request.nextUrl.origin
+      fetch(`${baseUrl}/api/whatsapp/notify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'new_order',
+          order: {
+            order_number: order.order_number,
+            customer_name: order.customer_name,
+            customer_phone: order.customer_phone,
+            items: [{ product_name: body.variantName || 'JENAURA Treatment', quantity: order.quantity }],
+            total: order.total,
+            payment_method: order.payment_method,
+            courier: order.courier,
+            shipping_address: {
+              address: order.shipping_address,
+              city: order.city,
+              postal_code: order.postal_code,
+            },
+          },
+        }),
+      }).catch(() => {})
+    } catch {
+      // Don't fail order creation if WA notification fails
+    }
 
     return NextResponse.json({ success: true, order }, { status: 201 })
   } catch (error) {
@@ -72,18 +86,13 @@ export async function GET(request: NextRequest) {
     const orderNumber = searchParams.get('order_number')
 
     if (orderNumber) {
-      // Get specific order
       const order = await getOrderByOrderNumber(orderNumber)
       if (!order) {
-        return NextResponse.json(
-          { error: 'Order not found' },
-          { status: 404 }
-        )
+        return NextResponse.json({ error: 'Order not found' }, { status: 404 })
       }
       return NextResponse.json(order)
     }
 
-    // Get all orders (for admin)
     const orders = await getOrders(100)
     return NextResponse.json(orders)
   } catch (error) {

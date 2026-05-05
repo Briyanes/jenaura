@@ -94,19 +94,65 @@ export async function getFirstActiveProductFull() {
 }
 
 // Orders
-export async function createOrder(order: Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>) {
+export interface CreateOrderData {
+  customer_name: string
+  customer_phone: string
+  customer_email?: string
+  shipping_address: string
+  city: string
+  province?: string
+  postal_code: string
+  notes?: string
+  variant_id?: string | null
+  quantity: number
+  subtotal: number
+  shipping_cost: number
+  discount_amount: number
+  total: number
+  courier: string
+  payment_method: string
+  payment_status?: string
+  status?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+}
+
+export async function createOrder(data: CreateOrderData) {
   const client = checkSupabase()
-  const { data, error } = await client
+  const order_number = `JEN-${Date.now().toString(36).toUpperCase()}`
+
+  const { data: order, error } = await client
     .from('orders')
     .insert({
-      ...order,
-      order_number: `JEN-${Date.now().toString(36).toUpperCase()}`,
+      order_number,
+      customer_name: data.customer_name,
+      customer_phone: data.customer_phone,
+      customer_email: data.customer_email || null,
+      shipping_address: data.shipping_address,
+      city: data.city,
+      province: data.province || null,
+      postal_code: data.postal_code,
+      notes: data.notes || null,
+      variant_id: data.variant_id || null,
+      quantity: data.quantity,
+      subtotal: data.subtotal,
+      shipping_cost: data.shipping_cost,
+      discount_amount: data.discount_amount,
+      total: data.total,
+      courier: data.courier,
+      payment_method: data.payment_method,
+      payment_status: data.payment_status || 'unpaid',
+      status: data.status || 'pending',
+      utm_source: data.utm_source || null,
+      utm_medium: data.utm_medium || null,
+      utm_campaign: data.utm_campaign || null,
     })
     .select()
     .single()
 
   if (error) throw error
-  return data
+  return order
 }
 
 export async function getOrderByOrderNumber(orderNumber: string) {
