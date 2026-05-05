@@ -71,17 +71,17 @@ export default function CaraPakaiPage() {
         <div className="relative max-w-3xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-4 gap-2">
             {[
-              { value: '2', unit: ' Menit', label: 'Waktu Pakai', icon: Timer },
-              { value: '0', unit: ' Bilas', label: 'Tidak Perlu', icon: Sparkles },
-              { value: '3–4', unit: 'x/Minggu', label: 'Frekuensi', icon: Calendar },
-              { value: '30', unit: ' Hari', label: 'Hasil Optimal', icon: TrendingUp },
-            ].map(({ value, unit, label, icon: Icon }) => (
+              { value: '2 Menit', label: 'Waktu Pakai', icon: Timer },
+              { value: '0 Bilas', label: 'Tidak Perlu', icon: Sparkles },
+              { value: '3–4x', label: 'Per Minggu', icon: Calendar },
+              { value: '30 Hari', label: 'Hasil Optimal', icon: TrendingUp },
+            ].map(({ value, label, icon: Icon }) => (
               <div key={label} className="bg-white/[0.05] border border-white/[0.08] rounded-xl p-3 text-center hover:border-jena-gold/30 transition-colors">
                 <div className="w-8 h-8 mx-auto mb-2 rounded-lg bg-jena-gold/10 border border-jena-gold/15 flex items-center justify-center">
                   <Icon size={14} className="text-jena-gold" />
                 </div>
-                <p className="text-lg font-bold text-jena-gold">{value}<span className="text-[10px] font-medium text-jena-gold/50">{unit}</span></p>
-                <p className="text-[10px] text-white/40 mt-0.5">{label}</p>
+                <p className="text-sm font-bold text-jena-gold leading-tight">{value}</p>
+                <p className="text-[10px] text-white/40 mt-0.5 leading-tight">{label}</p>
               </div>
             ))}
           </div>
