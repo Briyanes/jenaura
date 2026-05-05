@@ -375,13 +375,6 @@ html {
 
 /* --- Mobile Optimizations --- */
 @media (max-width: 767px) {
-  /* Compact hero for mobile */
-  .min-h-screen {
-    min-height: auto !important;
-    padding-top: 4rem !important;
-    padding-bottom: 4rem !important;
-  }
-
   /* Remove default body margin */
   body {
     margin: 0;
