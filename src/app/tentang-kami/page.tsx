@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Heart, Shield, Users, Sparkles, Star, Leaf, FlameKindling } from 'lucide-react'
+import { ArrowRight, Heart, Shield, Users, Sparkles, Star, Leaf } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Tentang Kami',
@@ -107,27 +107,6 @@ export default function TentangKamiPage() {
                 </div>
                 <h3 className="text-white font-semibold text-sm mb-2">{title}</h3>
                 <p className="text-white/40 text-xs leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── STATS ── */}
-      <section className="bg-jena-ivory py-14 sm:py-20">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {[
-              { num: '1000+', label: 'Pelanggan Puas', icon: Users },
-              { num: '4.9', label: 'Rating Bintang', icon: Star },
-              { num: '30+', label: 'Kota di Indonesia', icon: FlameKindling },
-              { num: '100%', label: 'Garansi Uang Kembali', icon: Shield },
-            ].map(({ num, label, icon: Icon }) => (
-              <div key={label} className="relative group bg-white border border-jena-peach/60 rounded-2xl p-5 sm:p-7 hover:border-jena-gold/50 hover:shadow-lg hover:shadow-jena-gold/8 transition-all duration-300 overflow-hidden">
-                <div className="absolute top-0 right-0 w-20 h-20 bg-jena-gold/5 rounded-full blur-2xl" />
-                <Icon size={16} className="text-jena-gold mb-3 opacity-70" />
-                <p className="font-display text-3xl sm:text-4xl font-bold text-jena-mocha leading-none mb-2">{num}</p>
-                <p className="text-xs text-jena-charcoal/45 font-medium">{label}</p>
               </div>
             ))}
           </div>
