@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function TentangKamiPage() {
   return (
-    <main className="bg-jena-ivory min-h-screen">
+    <main className="bg-white min-h-screen">
       <div className="max-w-2xl mx-auto px-5 sm:px-6 header-pt-page pb-20">
 
         <p className="text-jena-gold text-xs tracking-[0.25em] uppercase font-semibold mb-6">Tentang Kami</p>
@@ -34,13 +34,13 @@ export default function TentangKamiPage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/checkout"
-              className="inline-flex items-center justify-center bg-jena-mocha text-white px-7 py-3 rounded-full text-sm font-semibold hover:bg-jena-charcoal transition-colors"
+              className="inline-flex items-center justify-center bg-jena-mocha text-white px-7 py-2 rounded-full text-sm font-semibold hover:bg-jena-charcoal transition-colors"
             >
               Coba Sekarang
             </Link>
             <Link
               href="/produk/jenaura-keratin-treatment"
-              className="inline-flex items-center justify-center border border-jena-peach text-jena-mocha px-7 py-3 rounded-full text-sm font-semibold hover:border-jena-gold/60 transition-colors"
+              className="inline-flex items-center justify-center border border-jena-peach text-jena-mocha px-7 py-2 rounded-full text-sm font-semibold hover:border-jena-gold/60 transition-colors"
             >
               Lihat Produk
             </Link>
