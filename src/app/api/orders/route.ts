@@ -74,9 +74,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Order creation error:', error)
     const message =
-      error instanceof Error ? error.message : String(error)
+      error instanceof Error
+        ? error.message
+        : typeof error === 'object' && error !== null && 'message' in error
+          ? String((error as { message: unknown }).message)
+          : String(error)
     return NextResponse.json(
-      { error: message || 'Failed to create order' },
+      { error: message || 'Gagal membuat pesanan' },
       { status: 500 }
     )
   }

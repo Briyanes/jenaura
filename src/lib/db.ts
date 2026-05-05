@@ -151,7 +151,7 @@ export async function createOrder(data: CreateOrderData) {
     .select()
     .single()
 
-  if (error) throw error
+  if (error) throw new Error(error.message || JSON.stringify(error))
   return order
 }
 
