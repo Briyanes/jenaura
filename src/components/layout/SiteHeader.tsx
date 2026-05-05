@@ -115,7 +115,7 @@ export default function SiteHeader() {
                 >
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-1 px-4 py-2 text-[11px] font-bold tracking-[0.1em] uppercase transition-colors duration-150 ${
+                    className={`flex items-center gap-1 px-4 py-2 text-sm font-bold tracking-[0.08em] uppercase transition-colors duration-150 ${
                       openDropdown === link.label
                         ? scrolled ? 'text-jena-mocha' : 'text-white'
                         : linkClass
@@ -152,7 +152,7 @@ export default function SiteHeader() {
                           <Link
                             key={child.href}
                             href={child.href}
-                            className="flex items-center gap-2 px-4 py-2.5 text-[12px] font-semibold text-jena-mocha/65 hover:text-jena-mocha hover:bg-jena-gold/6 transition-colors"
+                            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-jena-mocha/65 hover:text-jena-mocha hover:bg-jena-gold/6 transition-colors"
                           >
                             <span className="w-1 h-1 rounded-full bg-jena-gold/50 shrink-0" />
                             {child.label}
@@ -199,7 +199,7 @@ export default function SiteHeader() {
               {/* Desktop CTA */}
               <Link
                 href="/checkout"
-                className={`hidden lg:flex items-center gap-1.5 text-[12px] font-bold px-4 py-2 rounded-xl transition-all duration-300 ml-1 ${
+                className={`hidden lg:flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-xl transition-all duration-300 ml-1 ${
                   scrolled
                     ? 'bg-jena-mocha hover:bg-jena-gold text-white'
                     : 'bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-sm'
@@ -270,7 +270,7 @@ export default function SiteHeader() {
               <Link
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-between px-5 py-3.5 text-[12px] font-bold tracking-[0.08em] uppercase text-jena-mocha/65 hover:text-jena-mocha hover:bg-jena-gold/6 border-b border-jena-mocha/5 transition-colors group"
+                className="flex items-center justify-between px-5 py-3.5 text-sm font-bold tracking-[0.06em] uppercase text-jena-mocha/65 hover:text-jena-mocha hover:bg-jena-gold/6 border-b border-jena-mocha/5 transition-colors group"
               >
                 {link.label}
                 <ChevronRight size={14} className="text-jena-mocha/25 group-hover:text-jena-gold transition-colors" />
@@ -280,7 +280,7 @@ export default function SiteHeader() {
                   key={child.href}
                   href={child.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 pl-8 pr-5 py-2.5 text-[11px] font-semibold text-jena-mocha/45 hover:text-jena-mocha hover:bg-jena-gold/4 border-b border-jena-mocha/4 transition-colors"
+                  className="flex items-center gap-2 pl-8 pr-5 py-2.5 text-sm font-semibold text-jena-mocha/45 hover:text-jena-mocha hover:bg-jena-gold/4 border-b border-jena-mocha/4 transition-colors"
                 >
                   <span className="w-1 h-1 rounded-full bg-jena-gold/50 shrink-0" />
                   {child.label}
