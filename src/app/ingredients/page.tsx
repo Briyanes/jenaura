@@ -17,7 +17,7 @@ export default function IngredientsPage() {
         <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt-page">
           <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">Formula Premium</p>
           <h1 className="font-display text-3xl sm:text-4xl text-white font-bold mb-3">Ingredients <span className="text-jena-gold">JENAURA</span></h1>
-          <p className="text-sm text-white/40 max-w-md mx-auto">Diformulasikan dengan bahan berkualitas tinggi yang terbukti efektif.</p>
+          <p className="text-base text-white/40 max-w-md mx-auto">Diformulasikan dengan bahan berkualitas tinggi yang terbukti efektif.</p>
         </div>
       </section>
 
@@ -32,8 +32,8 @@ export default function IngredientsPage() {
                   <div className="w-10 h-10 mb-3 rounded-xl bg-jena-gold/10 border border-jena-gold/20 flex items-center justify-center">
                     <IconComponent size={18} className="text-jena-gold" />
                   </div>
-                  <h2 className="font-display text-sm text-jena-mocha font-bold mb-1.5">{ing.name}</h2>
-                  <p className="text-xs text-jena-charcoal/60 leading-relaxed">{ing.description}</p>
+                  <h2 className="font-display text-base text-jena-mocha font-bold mb-1.5">{ing.name}</h2>
+                  <p className="text-sm text-jena-charcoal/60 leading-relaxed">{ing.description}</p>
                 </div>
               )
             })}
@@ -42,7 +42,7 @@ export default function IngredientsPage() {
           {/* Full list */}
           <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-jena-peach/50 mb-6">
             <p className="text-[10px] font-bold text-jena-gold/70 uppercase tracking-widest mb-2">Kandungan Lengkap</p>
-            <p className="text-xs text-jena-charcoal/60 leading-relaxed">{HERO_PRODUCT.ingredientList}</p>
+            <p className="text-sm text-jena-charcoal/60 leading-relaxed">{HERO_PRODUCT.ingredientList}</p>
           </div>
 
           <div className="text-center">

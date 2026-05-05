@@ -67,7 +67,7 @@ export function PricingCarousel({ variants, productSlug, productImage }: Pricing
 
               <div className="mt-auto">
                 {variant.saveAmount > 0 && (
-                  <p className="text-xs text-jena-gold/80 font-semibold mb-1">Hemat {formatRupiah(variant.saveAmount)}</p>
+                  <p className="text-sm text-jena-gold/80 font-semibold mb-1">Hemat {formatRupiah(variant.saveAmount)}</p>
                 )}
                 <p className="text-xl font-bold text-white mb-1">{formatRupiah(variant.price)}</p>
                 <p className="text-xs text-white/40 mb-4">{formatRupiah(Math.round(variant.price / variant.quantity))} / tube</p>

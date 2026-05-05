@@ -128,7 +128,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 )}
               </div>
 
-              <p className="text-sm text-white/60 leading-relaxed mb-6">{product.description}</p>
+              <p className="text-base text-white/60 leading-relaxed mb-6">{product.description}</p>
 
               <ProductClientActions product={product} variants={variants} />
 
@@ -140,7 +140,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 ].map(({ icon: Icon, label }) => (
                   <div key={label} className="flex items-center gap-2 p-3 bg-white/[0.04] border border-white/[0.06] rounded-xl hover:border-jena-gold/25 transition-colors">
                     <Icon size={14} className="text-jena-gold flex-shrink-0" />
-                    <span className="text-xs text-white/40">{label}</span>
+                    <span className="text-sm text-white/40">{label}</span>
                   </div>
                 ))}
               </div>
@@ -160,7 +160,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <div className="w-5 h-5 rounded-md bg-jena-gold/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Check size={11} className="text-jena-gold" strokeWidth={2.5} />
                 </div>
-                <p className="text-xs text-jena-charcoal/70 leading-relaxed">{benefit}</p>
+                <p className="text-sm text-jena-charcoal/70 leading-relaxed">{benefit}</p>
               </div>
             ))}
           </div>
@@ -180,15 +180,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   <div className="w-10 h-10 mb-3 rounded-xl bg-jena-gold/10 border border-jena-gold/15 flex items-center justify-center">
                     <IconComponent size={18} className="text-jena-gold" />
                   </div>
-                  <h3 className="font-display text-sm text-white font-bold mb-1">{ing.name}</h3>
-                  <p className="text-xs text-white/40 leading-relaxed">{ing.description}</p>
+                  <h3 className="font-display text-base text-white font-bold mb-1">{ing.name}</h3>
+                  <p className="text-sm text-white/40 leading-relaxed">{ing.description}</p>
                 </div>
               )
             })}
           </div>
           <div className="bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-3">
             <span className="text-[10px] font-bold text-white/25 uppercase tracking-widest mr-2">Kandungan:</span>
-            <span className="text-xs text-white/35 leading-relaxed">{product.ingredientList}</span>
+            <span className="text-sm text-white/35 leading-relaxed">{product.ingredientList}</span>
           </div>
         </div>
       </section>

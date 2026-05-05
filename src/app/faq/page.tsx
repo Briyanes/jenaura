@@ -35,13 +35,13 @@ export default function FAQPage() {
                   {faqs.map((faq) => (
                     <details key={faq.id} className="group bg-white/70 backdrop-blur-sm rounded-2xl overflow-hidden border border-jena-peach/50 hover:border-jena-gold/40 transition-all duration-300 hover:shadow-md hover:shadow-jena-gold/6">
                       <summary className="flex items-center justify-between p-5 cursor-pointer list-none select-none">
-                        <span className="text-sm sm:text-base font-semibold text-jena-charcoal pr-4">{faq.question}</span>
+                        <span className="text-base font-semibold text-jena-charcoal pr-4">{faq.question}</span>
                         <div className="w-7 h-7 rounded-full border border-jena-gold/25 flex items-center justify-center flex-shrink-0 group-open:bg-jena-gold group-open:border-jena-gold transition-all duration-200">
                           <ChevronRight size={14} className="text-jena-gold group-open:text-jena-charcoal group-open:rotate-90 transition-transform duration-200" />
                         </div>
                       </summary>
                       <div className="px-5 pb-5 border-t border-jena-peach/40">
-                        <p className="text-sm text-jena-charcoal/60 leading-relaxed pt-4">{faq.answer}</p>
+                        <p className="text-base text-jena-charcoal/60 leading-relaxed pt-4">{faq.answer}</p>
                       </div>
                     </details>
                   ))}

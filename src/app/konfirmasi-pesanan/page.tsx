@@ -29,7 +29,7 @@ export default async function OrderConfirmationPage({
           <h1 className="font-display text-2xl sm:text-3xl text-white font-bold mb-3">
             Pesanan Berhasil! 🎉
           </h1>
-          <p className="text-sm text-white/40 mb-7 leading-relaxed">
+          <p className="text-base text-white/40 mb-7 leading-relaxed">
             Terima kasih sudah mempercayakan perawatan rambutmu kepada JENAURA. Kami akan segera memproses pesananmu.
           </p>
 
@@ -47,7 +47,7 @@ export default async function OrderConfirmationPage({
                 'Kamu menerima nomor resi pengiriman',
                 'Paket sampai di depan pintu! 📦',
               ].map((item, i) => (
-                <li key={i} className="flex gap-3 text-sm text-white/50">
+                <li key={i} className="flex gap-3 text-base text-white/50">
                   <span className="font-bold text-jena-gold flex-shrink-0">{i + 1}.</span>
                   {item}
                 </li>
