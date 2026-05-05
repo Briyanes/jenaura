@@ -8,7 +8,7 @@ export const orderSchema = z.object({
   address: z.string().min(10, 'Alamat terlalu singkat'),
   city: z.string().min(3, 'Kota wajib diisi'),
   district: z.string().optional(),
-  postalCode: z.string().regex(/^\d{5}$/, 'Kode pos harus 5 digit'),
+  postalCode: z.string().regex(/^\d{5}$/, 'Kode pos harus 5 digit').optional().or(z.literal('')),
   variantId: z.string().optional(),
   quantity: z.number().min(1).max(10),
   courier: z.string().min(1, 'Pilih kurir pengiriman'),

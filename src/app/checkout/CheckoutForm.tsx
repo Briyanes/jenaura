@@ -207,12 +207,11 @@ export default function CheckoutForm({ variants, productName }: Props) {
       setIsSubmitting(false)
       return
     }
-    if (!postal || !/^\d{5}$/.test(postal)) {
-      toast.error('Harap isi kode pos yang valid (5 digit)')
+    if (postal && !/^\d{5}$/.test(postal)) {
+      toast.error('Kode pos tidak valid (harus 5 digit angka)')
       setIsSubmitting(false)
       return
     }
-
     // Normalize phone: 08xxx → 628xxx
     const customerPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone
 
@@ -352,12 +351,11 @@ export default function CheckoutForm({ variants, productName }: Props) {
                 )}
               </div>
               <div>
-                <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Kode Pos *</label>
+                <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Kode Pos <span className="text-jena-gray-medium font-normal">(opsional)</span></label>
                 <input
                   type="text"
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
-                  required
                   className="input-field"
                   placeholder="Auto-isi saat pilih kota"
                 />
