@@ -410,7 +410,7 @@ html {
 /* Fixed header = promo bar (~40px) + navbar (64px) ≈ 104px total.
    Add comfortable breathing room above page content. */
 .header-pt {
-  padding-top: 14rem; /* 224px — mobile */
+  padding-top: 12rem; /* 192px — mobile */
 }
 @media (min-width: 640px) {
   .header-pt {
