@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
 
       if (response.ok) {
         toast.success('Login berhasil')
-        router.push('/admin')
+        window.location.href = '/admin'
       } else {
         toast.error('Password salah')
       }
