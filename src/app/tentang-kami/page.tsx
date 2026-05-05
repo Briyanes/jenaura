@@ -13,7 +13,7 @@ export default function TentangKamiPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-jena-mocha to-jena-charcoal pb-10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-72 h-72 bg-jena-gold/8 rounded-full blur-[100px] pointer-events-none" />
-        <div className="max-w-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt">
+        <div className="max-w-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt-page">
           <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">Cerita Kami</p>
           <h1 className="font-display text-3xl sm:text-4xl text-white font-bold">Tentang <span className="text-jena-gold">JENAURA</span></h1>
         </div>

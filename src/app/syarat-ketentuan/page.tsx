@@ -16,7 +16,7 @@ export default function TermsPage() {
     <main>
       <section className="bg-gradient-to-br from-jena-mocha to-jena-charcoal pb-12 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-jena-gold/8 rounded-full blur-[90px] pointer-events-none" />
-        <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 relative header-pt">
+        <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 relative header-pt-page">
           <h1 className="font-display text-3xl sm:text-4xl text-white font-bold mb-2">Syarat & Ketentuan</h1>
           <p className="text-xs text-white/30">Terakhir diperbarui: Februari 2026</p>
         </div>

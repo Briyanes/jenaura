@@ -18,7 +18,7 @@ export default function CaraPakaiPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-jena-mocha to-jena-charcoal pb-10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-72 h-72 bg-jena-gold/8 rounded-full blur-[100px] pointer-events-none" />
-        <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt">
+        <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt-page">
           <div className="inline-flex items-center gap-2 bg-jena-gold/15 border border-jena-gold/25 text-jena-gold text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-5">
             <Clock size={12} />
             2 Menit Selesai

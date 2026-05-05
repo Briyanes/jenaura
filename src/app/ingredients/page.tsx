@@ -14,7 +14,7 @@ export default function IngredientsPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-jena-mocha to-jena-charcoal pb-10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-jena-gold/8 rounded-full blur-[90px] pointer-events-none" />
-        <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt">
+        <div className="max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt-page">
           <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">Formula Premium</p>
           <h1 className="font-display text-3xl sm:text-4xl text-white font-bold mb-3">Ingredients <span className="text-jena-gold">JENAURA</span></h1>
           <p className="text-sm text-white/40 max-w-md mx-auto">Diformulasikan dengan bahan berkualitas tinggi yang terbukti efektif.</p>

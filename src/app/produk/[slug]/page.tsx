@@ -24,7 +24,7 @@ export default function ProductDetailPage() {
       {/* Product Detail */}
       <section className="bg-jena-charcoal relative overflow-hidden">
         <div className="absolute top-0 right-0 w-80 h-80 bg-jena-gold/6 rounded-full blur-[120px] pointer-events-none" />
-        <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 header-pt pb-8 sm:pb-12">
+        <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 header-pt-page pb-8 sm:pb-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs text-white/30 mb-8">
             <Link href="/" className="hover:text-jena-gold transition-colors flex items-center gap-1">

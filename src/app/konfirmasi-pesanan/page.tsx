@@ -16,7 +16,7 @@ export default async function OrderConfirmationPage({
   const orderId = id || 'PENDING'
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-jena-mocha to-jena-charcoal flex items-center justify-center header-pt lg:pt-16 pb-16 px-5 relative overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-br from-jena-mocha to-jena-charcoal flex items-center justify-center header-pt-page lg:pt-16 pb-16 px-5 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-80 h-80 bg-jena-gold/8 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-60 h-60 bg-jena-gold/5 rounded-full blur-[100px] pointer-events-none" />
 

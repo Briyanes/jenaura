@@ -16,7 +16,7 @@ export default function FAQPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-jena-mocha to-jena-charcoal pb-12 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-jena-gold/8 rounded-full blur-[90px] pointer-events-none" />
-        <div className="max-w-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt">
+        <div className="max-w-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt-page">
           <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">Pertanyaan Umum</p>
           <h1 className="font-display text-3xl sm:text-4xl text-white font-bold">FAQ</h1>
         </div>
