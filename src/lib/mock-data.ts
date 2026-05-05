@@ -196,7 +196,6 @@ export const NAV_LINKS = [
     href: '/produk/jenaura-keratin-no-wash-treatment',
     children: [
       { label: 'Keratin No-Wash Treatment', href: '/produk/jenaura-keratin-no-wash-treatment' },
-      { label: 'Kandungan Aktif', href: '/ingredients' },
     ],
   },
   { label: 'Cara Pakai', href: '/cara-pakai' },
