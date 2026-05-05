@@ -72,7 +72,7 @@ function AccordionSection({
         onClick={onToggle}
         aria-expanded={isOpen}
       >
-        <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em]">{title}</span>
+        <span className="text-sm font-bold text-white uppercase tracking-[0.15em]">{title}</span>
         <ChevronDown
           size={16}
           className={`text-white/50 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
@@ -167,7 +167,7 @@ export default function Footer() {
           <p className="font-display text-xl tracking-[0.18em] text-white font-extrabold mb-1.5">
             JENAURA
           </p>
-          <p className="text-xs text-white/60 leading-relaxed">
+          <p className="text-sm text-white/60 leading-relaxed">
             Hair Treatment At Home — perawatan rambut profesional yang bisa kamu lakukan sendiri di rumah, tanpa perlu ke salon.
           </p>
         </div>
