@@ -16,7 +16,7 @@ export default function HomePage() {
     <main>
 
       {/* ========== HERO ========== */}
-      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex items-start justify-center overflow-hidden">
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-top bg-no-repeat"
