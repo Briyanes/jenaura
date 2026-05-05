@@ -315,7 +315,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
                     onChange={(e) => handleCityInput(e.target.value)}
                     onFocus={() => areaResults.length > 0 && setShowAreaDropdown(true)}
                     required
-                    className="input-field pl-9"
+                    className="input-field !pl-10"
                     placeholder="Ketik kota / kecamatan untuk cari tarif pengiriman..."
                     autoComplete="off"
                   />
