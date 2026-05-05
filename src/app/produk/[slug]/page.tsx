@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Star, Check, Truck, Shield, RotateCcw, Sparkles, Droplets, Leaf, ArrowLeft } from 'lucide-react'
-import { HERO_PRODUCT, PRODUCT_VARIANTS, MOCK_REVIEWS } from '@/lib/mock-data'
+import { Check, Truck, Shield, RotateCcw, Sparkles, Droplets, Leaf, ArrowLeft } from 'lucide-react'
+import { HERO_PRODUCT, PRODUCT_VARIANTS } from '@/lib/mock-data'
 import { formatRupiah } from '@/lib/utils'
 import ProductClientActions from './ProductClientActions'
 
@@ -61,15 +61,6 @@ export default function ProductDetailPage() {
               <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl text-white font-bold mb-2">{product.name}</h1>
               <p className="text-xs text-white/30 mb-4">{product.weight}</p>
 
-              <div className="flex items-center gap-2 mb-5">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={14} className="text-jena-gold fill-jena-gold" />
-                  ))}
-                </div>
-                <span className="text-xs text-white/30">4.9 (1000+ reviews)</span>
-              </div>
-
               <div className="flex items-baseline gap-3 mb-5">
                 <span className="text-3xl font-bold text-white">{formatRupiah(product.price)}</span>
                 {product.comparePrice && (
@@ -82,7 +73,7 @@ export default function ProductDetailPage() {
                 )}
               </div>
 
-              <p className="text-sm text-white/50 leading-relaxed mb-6">{product.description}</p>
+              <p className="text-sm text-white/60 leading-relaxed mb-6">{product.description}</p>
 
               <ProductClientActions product={product} variants={PRODUCT_VARIANTS} />
 
@@ -147,26 +138,6 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* Reviews */}
-      <section className="py-8 sm:py-10 bg-jena-ivory">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <p className="text-[10px] font-bold text-jena-gold/70 uppercase tracking-widest mb-1">Ulasan</p>
-          <h2 className="font-display text-xl sm:text-2xl text-jena-mocha font-bold mb-4">Yang Mereka Rasakan</h2>
-          <div className="flex gap-3 overflow-x-auto snap-x scrollbar-hide pb-2 sm:grid sm:grid-cols-3 lg:grid-cols-4">
-            {MOCK_REVIEWS.map((review) => (
-              <div key={review.id} className="w-[72vw] max-w-[280px] flex-shrink-0 snap-start sm:w-auto sm:max-w-none bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-jena-peach/50 hover:border-jena-gold/35 transition-colors">
-                <div className="flex gap-0.5 mb-2">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={12} className={i < review.rating ? 'text-jena-gold fill-jena-gold' : 'text-jena-peach/40'} />
-                  ))}
-                </div>
-                <p className="text-xs text-jena-charcoal/65 leading-relaxed mb-2">&ldquo;{review.comment}&rdquo;</p>
-                <p className="text-[10px] text-jena-mocha/40">{review.customerName}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </main>
   )
 }

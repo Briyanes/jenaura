@@ -60,18 +60,7 @@ export default function ProductClientActions({ product, variants }: { product: P
           <ShoppingBag size={18} />
           Beli Sekarang
         </Link>
-        <Link
-          href="/checkout"
-          className="btn-secondary text-base w-full"
-        >
-          Tambah ke Keranjang
-        </Link>
       </div>
-
-      {/* Stock Info */}
-      <p className="text-xs text-jena-gray-medium text-center mt-2">
-        🔥 Stok tersisa: {product.stock} — Jangan sampai kehabisan!
-      </p>
     </div>
   )
 }

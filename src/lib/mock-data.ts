@@ -5,7 +5,7 @@ export const HERO_PRODUCT: Product = {
   name: 'JENAURA Keratin No-Wash Treatment',
   slug: 'jenaura-keratin-no-wash-treatment',
   description:
-    'JENAURA adalah leave-in treatment profesional yang bisa kamu pakai sendiri di rumah — tanpa perlu bilas. Diformulasikan dengan Hydrolyzed Keratin, Hydrolyzed Silk, dan Argan Oil — bahan-bahan premium yang biasa ditemukan di perawatan salon kelas atas, kini hadir dalam format yang praktis dan terjangkau.',
+    'Leave-in treatment dengan Hydrolyzed Keratin, Hydrolyzed Silk, dan Argan Oil. Oleskan setelah keramas — tidak perlu dibilas. Rambut terasa lebih lembut dan mudah diatur mulai pemakaian pertama.',
   shortDescription:
     'Keratin No-Wash Treatment untuk rambut yang bercahaya. Tanpa bilas. Tanpa ribet.',
   price: 149000,
@@ -21,38 +21,35 @@ export const HERO_PRODUCT: Product = {
     {
       id: 'ing_001',
       name: 'Hydrolyzed Keratin',
-      description:
-        'Protein rambut yang mengisi celah-celah rambut rusak dari dalam. Hasilnya: rambut lebih kuat, lebih halus, dan lebih mudah diatur.',
+      description: 'Mengisi celah rambut rusak dari dalam. Rambut lebih kuat, halus, dan mudah diatur.',
       icon: 'sparkles',
     },
     {
       id: 'ing_002',
       name: 'Hydrolyzed Silk',
-      description:
-        'Melapisi kutikula rambut dengan lapisan proteksi lembut. Memberikan kilau natural dan tekstur sutra yang terasa nyata.',
+      description: 'Melapisi kutikula rambut, memberikan kilau natural dan tekstur lembut seperti sutra.',
       icon: 'droplets',
     },
     {
       id: 'ing_003',
       name: 'Argan Oil',
-      description:
-        '"Liquid gold" dari Maroko. Menutrisi ujung rambut, melembapkan tanpa terasa berminyak, dan melindungi dari panas styling.',
+      description: 'Menutrisi dan melembapkan rambut tanpa rasa berminyak. Melindungi dari panas styling.',
       icon: 'leaf',
     },
   ],
   benefits: [
-    'Rambut lebih lembut dan mudah diatur mulai pemakaian pertama',
-    'Kilau natural yang terlihat sehat, bukan greasy',
+    'Rambut lebih lembut dan mudah diatur',
+    'Kilau natural yang terlihat sehat',
     'Ujung rambut lebih kuat, bercabang berkurang',
-    'Rambut terlindungi dari panas & polusi sepanjang hari',
+    'Terlindungi dari panas & polusi',
     'Aroma lembut yang tahan lama',
-    'Tanpa bilas — hemat waktu, bisa langsung styling',
+    'Tanpa bilas — hemat waktu',
   ],
   howToUse: [
-    'Keramas dan keringkan rambut dengan handuk sampai lembap (tidak basah kuyup)',
-    'Ambil secukupnya JENAURA (1-2 pump atau seukuran koin untuk rambut panjang)',
-    'Ratakan dari tengah rambut ke ujung — hindari kulit kepala',
-    'Sisir dan styling seperti biasa — tidak perlu dibilas',
+    'Keramas, lalu keringkan rambut dengan handuk sampai lembap.',
+    'Ambil secukupnya (1–2 pump untuk rambut pendek, lebih untuk rambut panjang).',
+    'Ratakan dari tengah ke ujung rambut — hindari kulit kepala.',
+    'Sisir dan styling seperti biasa — tidak perlu dibilas.',
   ],
   ingredientList:
     'Purified Water, Propylene Glycol, Cetearyl Alcohol, Dimethicone, Cyclopentasiloxane, Stear Trimonium Chloride, Isopropyl Myristate, Argan Kernel Oil, Amodimethicone, Fragrance, Alpha-isomethyl Ionone, Benzyl Alcohol, Benzyl Benzoate, Citronellol, Coumarin, Limonene, Eugenol, Geraniol, Hydroxy Citronellal, Linalool, Sodium Dilauramidoglutamylsine, Phenoxyethanol, Disodium EDTA, Tocopheryl Acetate, Betaine, Sodium PCA, Sorbitol, Serine, Glycine, Glutamic Acid, Alanine, Lysine, Arginine, Threonine, Proline, Hydrolyzed Keratin, Hydrolyzed Silk, Lactic Acid',

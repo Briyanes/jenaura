@@ -4,6 +4,7 @@ import { Toaster } from 'sonner'
 import SiteHeader from '@/components/layout/SiteHeader'
 import Footer from '@/components/layout/Footer'
 import WhatsAppButton from '@/components/layout/WhatsAppButton'
+import PixelProvider from '@/components/PixelProvider'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -29,13 +30,11 @@ export const metadata: Metadata = {
   description:
     'JENAURA adalah leave-in treatment profesional yang bisa kamu pakai sendiri di rumah. Keratin No-Wash Treatment dengan Hydrolyzed Keratin, Silk & Argan Oil.',
   keywords: [
-    'hair treatment',
-    'keratin treatment',
-    'perawatan rambut',
-    'hair care',
-    'leave in treatment',
-    'jenaura',
-    'no wash treatment',
+    'hair treatment', 'keratin treatment', 'perawatan rambut', 'hair care',
+    'leave in treatment', 'jenaura', 'no wash treatment', 'keratin no wash',
+    'rambut lembut', 'rambut bercahaya', 'perawatan rambut rumahan',
+    'hair treatment murah', 'keratin rumahan', 'rambut sehat', 'argan oil',
+    'hydrolyzed keratin', 'jenaura keratin', 'treatment rambut di rumah',
   ],
   authors: [{ name: 'JENAURA' }],
   creator: 'JENAURA',
@@ -76,6 +75,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <WhatsAppButton />
+        <PixelProvider />
         <Toaster
           position="top-center"
           toastOptions={{

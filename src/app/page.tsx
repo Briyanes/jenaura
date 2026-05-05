@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import {
-  Sparkles, Droplets, Star,
-  ArrowRight, ChevronRight, Truck, RotateCcw,
+  Sparkles, Droplets, ChevronRight,
+  ArrowRight, Truck, RotateCcw,
   Heart, Hand, ArrowDown,
   Scissors, AlertCircle, Wind, Palette,
-  BadgeCheck, FlameKindling,
+  BadgeCheck,
   ShoppingBag,
 } from 'lucide-react'
 import { HERO_PRODUCT, MOCK_FAQS } from '@/lib/mock-data'
@@ -102,12 +102,8 @@ export default function HomePage() {
                   </div>
                   <p className="text-sm text-white/50 tracking-[0.18em] font-medium">Keratin Treatment</p>
                   <p className="text-xs text-white/30 tracking-wider">{HERO_PRODUCT.weight}</p>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    {[1,2,3,4,5].map(i => (
-                      <Star key={i} size={16} className="text-jena-gold fill-jena-gold" />
-                    ))}
-                  </div>
-                  <p className="text-xs text-white/35 font-medium">4.9 · 1000+ Reviews</p>
+                  <div className="h-px w-16 bg-jena-gold/30 mx-auto mt-4" />
+                  <p className="text-xs text-white/30 font-medium mt-3">Leave-in · No Rinse</p>
                 </div>
               </div>
             </div>
@@ -124,21 +120,21 @@ export default function HomePage() {
       {/* ========== TRUST BAR ========== */}
       <section className="bg-jena-ivory border-y border-jena-gold/10 py-5">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-0 sm:justify-between overflow-x-auto scrollbar-hide -mx-5 px-5 sm:mx-0 sm:px-0">
+          <div className="grid grid-cols-2 sm:flex sm:items-center sm:justify-between gap-3 sm:gap-0">
             {[
               { icon: BadgeCheck, label: 'BPOM Certified', sublabel: 'Aman & Terdaftar' },
-              { icon: Star, label: '4.9/5 Rating', sublabel: '1000+ Happy Customers' },
               { icon: Truck, label: 'Free Ongkir', sublabel: 'Min. Rp189.000' },
-              { icon: RotateCcw, label: 'Garansi 100%', sublabel: 'Money Back' },
-              { icon: FlameKindling, label: 'Terlaris 2025', sublabel: '#1 Hair Treatment' },
+              { icon: RotateCcw, label: 'Garansi 100%', sublabel: 'Uang Kembali' },
+              { icon: Sparkles, label: 'Tanpa Bilas', sublabel: 'Leave-in Formula' },
+              { icon: Hand, label: 'Mudah Dipakai', sublabel: '2 Menit Selesai' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-1 flex-shrink-0">
-                <div className="w-9 h-9 rounded-full bg-jena-gold/10 flex items-center justify-center flex-shrink-0">
-                  <item.icon size={16} className="text-jena-gold" />
+              <div key={i} className="flex items-center gap-2.5 sm:gap-3 px-0 sm:px-4 py-1">
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-jena-gold/10 flex items-center justify-center flex-shrink-0">
+                  <item.icon size={15} className="text-jena-gold" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-jena-mocha">{item.label}</p>
-                  <p className="text-xs text-gray-400">{item.sublabel}</p>
+                  <p className="text-xs sm:text-sm font-bold text-jena-mocha leading-tight">{item.label}</p>
+                  <p className="text-[10px] sm:text-xs text-gray-400">{item.sublabel}</p>
                 </div>
               </div>
             ))}
