@@ -407,13 +407,14 @@ html {
 }
 
 /* --- Header Offset Padding --- */
-/* Responsive padding-top to clear the fixed header (promo bar + navbar) */
+/* Fixed header = promo bar (~40px) + navbar (64px) ≈ 104px total.
+   Add comfortable breathing room above page content. */
 .header-pt {
-  padding-top: 14rem; /* 224px — mobile */
+  padding-top: 7rem; /* 112px — mobile */
 }
 @media (min-width: 640px) {
   .header-pt {
-    padding-top: 11rem; /* 176px — tablet */
+    padding-top: 8rem; /* 128px — tablet */
   }
 }
 @media (min-width: 1024px) {
