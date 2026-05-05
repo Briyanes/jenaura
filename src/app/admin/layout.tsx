@@ -1,15 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Package, ShoppingCart, Tag, Settings, Menu, X, LogOut } from 'lucide-react'
+import { LayoutDashboard, Package, ShoppingCart, Tag, Settings, Menu, X, LogOut, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/produk', label: 'Produk', icon: Package },
-  { href: '/admin/pesanan', label: 'Pesanan', icon: ShoppingCart },
+  { href: '/admin/pesanan', label: 'Pesanan', icon: ShoppingCart, badgeKey: 'pending' },
+  { href: '/admin/pelanggan', label: 'Pelanggan', icon: Users },
   { href: '/admin/promo', label: 'Promo', icon: Tag },
   { href: '/admin/pengaturan', label: 'Pengaturan', icon: Settings },
 ]
@@ -17,6 +18,14 @@ const NAV = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [pendingCount, setPendingCount] = useState(0)
+
+  useEffect(() => {
+    fetch('/api/admin/stats')
+      .then((r) => r.json())
+      .then((d) => setPendingCount(d.pendingCount || 0))
+      .catch(() => {})
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -35,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1"><X size={20} /></button>
         </div>
         <nav className="p-4 space-y-1">
-          {NAV.map(({ href, label, icon: Icon }) => (
+          {NAV.map(({ href, label, icon: Icon, badgeKey }) => (
             <Link
               key={href}
               href={href}
@@ -48,7 +57,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               )}
             >
               <Icon size={18} strokeWidth={1.5} />
-              {label}
+              <span className="flex-1">{label}</span>
+              {badgeKey === 'pending' && pendingCount > 0 && (
+                <span className="bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                  {pendingCount > 99 ? '99+' : pendingCount}
+                </span>
+              )}
             </Link>
           ))}
         </nav>
