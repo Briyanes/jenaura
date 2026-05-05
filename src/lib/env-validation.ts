@@ -16,6 +16,8 @@ export function validateEnv() {
     midtransClientKey: getEnvVar('MIDTRANS_CLIENT_KEY', ''),
     midtransIsProduction: process.env.MIDTRANS_IS_PRODUCTION === 'true',
     rajaongkirApiKey: getEnvVar('RAJAONGKIR_API_KEY', ''),
+    biteshipApiKey: getEnvVar('BITESHIP_API_KEY', ''),
+    biteshipOriginAreaId: getEnvVar('BITESHIP_ORIGIN_AREA_ID', ''),
     whatsappNumber: getEnvVar('NEXT_PUBLIC_WHATSAPP_NUMBER', '6281234567890'),
     adminPassword: getEnvVar('ADMIN_PASSWORD', 'admin123'),
   }

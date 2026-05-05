@@ -11,7 +11,7 @@ export const orderSchema = z.object({
   postalCode: z.string().regex(/^\d{5}$/, 'Kode pos harus 5 digit'),
   variantId: z.string().optional(),
   quantity: z.number().min(1).max(10),
-  courier: z.enum(['jne_reg', 'jnt', 'sicepat']),
+  courier: z.string().min(1, 'Pilih kurir pengiriman'),
   paymentMethod: z.enum(['bank_transfer', 'qris', 'ewallet', 'cod']),
   promoCode: z.string().optional(),
   notes: z.string().optional(),

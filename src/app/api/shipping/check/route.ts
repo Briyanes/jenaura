@@ -1,118 +1,110 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { env } from '@/lib/env-validation'
 
-interface RajaOngkirCity {
-  city_id: string
-  city_name: string
-  type: string
+const BITESHIP_API_KEY = process.env.BITESHIP_API_KEY || ''
+const ORIGIN_AREA_ID = process.env.BITESHIP_ORIGIN_AREA_ID || ''
+
+const FLAT_RATES = [
+  { id: 'jne_reg', name: 'JNE Reguler', price: 15000, estimate: '2-3 hari' },
+  { id: 'jnt_ez', name: 'J&T Express', price: 13000, estimate: '2-3 hari' },
+  { id: 'sicepat_best', name: 'SiCepat BEST', price: 12000, estimate: '2-4 hari' },
+]
+
+interface BiteshipArea {
+  id: string
+  administrative_division_level_1_name: string
+  administrative_division_level_2_name: string
+  administrative_division_level_3_name: string
   postal_code: string
 }
 
-interface RajaOngkirCost {
-  service: string
-  description: string
-  cost: [
-    {
-      value: number
-      etd: string
-      note: string
-    }
-  ]
+interface BiteshipPricing {
+  available: boolean
+  courier_code: string
+  courier_service_code: string
+  courier_name: string
+  courier_service_name: string
+  price: number
+  duration: string
 }
 
+// GET: search areas by query (for city autocomplete)
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const query = searchParams.get('search') || ''
+
+  if (query.length < 3) return NextResponse.json({ areas: [] })
+  if (!BITESHIP_API_KEY) return NextResponse.json({ areas: [] })
+
   try {
-    const { searchParams } = new URL(request.url)
-    const destination = searchParams.get('city')
-    const weight = searchParams.get('weight') || '1000'
-
-    if (!destination) {
-      return NextResponse.json(
-        { error: 'City parameter is required' },
-        { status: 400 }
-      )
-    }
-
-    // Call RajaOngkir API
-    const response = await fetch('https://api.rajaongkir.com/starter/cost', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        key: env.rajaongkirApiKey,
-      },
-      body: JSON.stringify({
-        origin: process.env.RAJAONGKIR_ORIGIN_CITY || '153', // Jakarta
-        destination: parseInt(destination),
-        weight: parseInt(weight),
-        courier: 'jne:jnt:sicepat',
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error('RajaOngkir API error')
-    }
-
-    const data = await response.json()
-    const results = data.rajaongkir.results
-
-    // Format response
-    const shippingOptions = results.flatMap((result: { code: string; name: string; costs: RajaOngkirCost[] }) =>
-      result.costs.map((cost: RajaOngkirCost) => ({
-        id: `${result.code}_${cost.service.toLowerCase()}`,
-        courier: result.name,
-        service: cost.service,
-        description: cost.description,
-        cost: cost.cost[0].value,
-        estimate: cost.cost[0].etd,
-      }))
+    const res = await fetch(
+      `https://api.biteship.com/v1/maps/areas?input=${encodeURIComponent(query)}&type=single&country_code=ID`,
+      { headers: { Authorization: `Bearer ${BITESHIP_API_KEY}` } }
     )
+    const data = await res.json()
+    const areas = (data.areas || []) as BiteshipArea[]
 
     return NextResponse.json({
-      success: true,
-      shipping_options: shippingOptions,
+      areas: areas.slice(0, 8).map((a) => ({
+        id: a.id,
+        label: `${a.administrative_division_level_3_name}, ${a.administrative_division_level_2_name}, ${a.administrative_division_level_1_name}`,
+        city: a.administrative_division_level_2_name,
+        province: a.administrative_division_level_1_name,
+        postal_code: a.postal_code,
+      })),
     })
-  } catch (error) {
-    console.error('Shipping cost error:', error)
-    return NextResponse.json(
-      { error: 'Failed to calculate shipping cost' },
-      { status: 500 }
-    )
+  } catch {
+    return NextResponse.json({ areas: [] })
   }
 }
 
-// Get cities list for autocomplete
+// POST: get real-time shipping rates from Biteship
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { query = '' } = body
+    const { destination_area_id, quantity = 1 } = body
 
-    if (query.length < 3) {
-      return NextResponse.json({ cities: [] })
+    if (!BITESHIP_API_KEY || !ORIGIN_AREA_ID || !destination_area_id) {
+      return NextResponse.json({ success: true, fallback: true, pricing: FLAT_RATES })
     }
 
-    // Call RajaOngkir cities API
-    const response = await fetch(`https://api.rajaongkir.com/starter/city?key=${env.rajaongkirApiKey}&query=${query}`)
-
-    if (!response.ok) {
-      throw new Error('RajaOngkir API error')
-    }
-
-    const data = await response.json()
-    const cities: RajaOngkirCity[] = data.rajaongkir.results.cities || []
-
-    return NextResponse.json({
-      success: true,
-      cities: cities.map((city) => ({
-        id: city.city_id,
-        name: `${city.type} ${city.city_name}`,
-        postal_code: city.postal_code,
-      })),
+    const res = await fetch('https://api.biteship.com/v1/rates/couriers', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${BITESHIP_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        origin_area_id: ORIGIN_AREA_ID,
+        destination_area_id,
+        couriers: 'jne,jnt,sicepat,anteraja',
+        items: [{
+          name: 'JENAURA Keratin No-Wash Treatment',
+          value: 149000,
+          length: 5,
+          width: 5,
+          height: 15,
+          weight: 200 * Math.max(quantity, 1),
+          quantity: Math.max(quantity, 1),
+        }],
+      }),
     })
-  } catch (error) {
-    console.error('Cities fetch error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch cities' },
-      { status: 500 }
-    )
+
+    const data = await res.json()
+    if (!data.success) throw new Error('Biteship rates error')
+
+    const pricing = (data.pricing as BiteshipPricing[])
+      .filter((p) => p.available)
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 5)
+      .map((p) => ({
+        id: `${p.courier_code}_${p.courier_service_code}`.toLowerCase(),
+        name: `${p.courier_name} ${p.courier_service_name}`,
+        price: p.price,
+        estimate: `${p.duration} hari`,
+      }))
+
+    return NextResponse.json({ success: true, pricing })
+  } catch {
+    return NextResponse.json({ success: true, fallback: true, pricing: FLAT_RATES })
   }
 }

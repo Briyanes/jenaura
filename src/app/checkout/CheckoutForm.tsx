@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { Landmark, QrCode, Wallet, Truck, Shield, Tag, Check, X } from 'lucide-react'
+import { Landmark, QrCode, Wallet, Truck, Shield, Tag, Check, X, Search, MapPin } from 'lucide-react'
 import { HERO_PRODUCT, COURIER_OPTIONS, PAYMENT_METHODS } from '@/lib/mock-data'
 import { formatRupiah } from '@/lib/utils'
 import { trackInitiateCheckout, trackAddPaymentInfo, trackPurchase } from '@/lib/tracking'
@@ -14,9 +14,30 @@ interface Props {
   productName: string
 }
 
+interface AreaOption {
+  id: string
+  label: string
+  city: string
+  province: string
+  postal_code: string
+}
+
+interface CourierOption {
+  id: string
+  name: string
+  price: number
+  estimate: string
+}
+
+const DEFAULT_COURIERS: CourierOption[] = COURIER_OPTIONS.map(c => ({
+  id: c.id, name: c.name, price: c.price, estimate: c.estimate,
+}))
+
 export default function CheckoutForm({ variants, productName }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const cityDropdownRef = useRef<HTMLDivElement>(null)
+  const citySearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(() =>
     variants.length >= 3 ? 2 : variants.length - 1
@@ -31,10 +52,21 @@ export default function CheckoutForm({ variants, productName }: Props) {
   const [isApplyingPromo, setIsApplyingPromo] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // City search & real-time shipping
+  const [cityQuery, setCityQuery] = useState('')
+  const [areaResults, setAreaResults] = useState<AreaOption[]>([])
+  const [showAreaDropdown, setShowAreaDropdown] = useState(false)
+  const [selectedArea, setSelectedArea] = useState<AreaOption | null>(null)
+  const [isSearchingArea, setIsSearchingArea] = useState(false)
+  const [postalCode, setPostalCode] = useState('')
+  const [couriers, setCouriers] = useState<CourierOption[]>(DEFAULT_COURIERS)
+  const [isLoadingRates, setIsLoadingRates] = useState(false)
+  const [isFlatRate, setIsFlatRate] = useState(true)
+
   const variant = variants[selectedVariantIdx] || variants[0]
-  const courier = COURIER_OPTIONS.find(c => c.id === selectedCourier)!
+  const activeCourier = couriers.find(c => c.id === selectedCourier) || couriers[0]
   const isFreeShipping = variant.quantity >= 2
-  const shippingCost = isFreeShipping ? 0 : courier.price
+  const shippingCost = isFreeShipping ? 0 : (activeCourier?.price || 0)
   const total = variant.price + shippingCost - promoDiscount
 
   // Capture UTM params on mount
@@ -51,7 +83,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
     })
   }, [searchParams])
 
-  // Reset promo discount when variant changes (subtotal changes)
+  // Reset promo when variant changes; re-fetch rates if area selected
   useEffect(() => {
     if (promoApplied) {
       setPromoApplied(false)
@@ -60,8 +92,66 @@ export default function CheckoutForm({ variants, productName }: Props) {
       setPromoId(undefined)
       toast.info('Pilih ulang varian — promo direset')
     }
+    if (selectedArea) fetchRates(selectedArea.id, variant.quantity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedVariantIdx])
+
+  // Close city dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (cityDropdownRef.current && !cityDropdownRef.current.contains(e.target as Node)) {
+        setShowAreaDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const fetchRates = useCallback(async (areaId: string, quantity: number) => {
+    setIsLoadingRates(true)
+    try {
+      const res = await fetch('/api/shipping/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ destination_area_id: areaId, quantity }),
+      })
+      const data = await res.json()
+      if (data.success && data.pricing?.length) {
+        setCouriers(data.pricing)
+        setIsFlatRate(data.fallback || false)
+        setSelectedCourier(data.pricing[0].id)
+      }
+    } catch {
+      // keep flat rates
+    } finally {
+      setIsLoadingRates(false)
+    }
+  }, [])
+
+  const handleCityInput = (value: string) => {
+    setCityQuery(value)
+    setSelectedArea(null)
+    if (citySearchTimer.current) clearTimeout(citySearchTimer.current)
+    if (value.length < 3) { setAreaResults([]); setShowAreaDropdown(false); return }
+    citySearchTimer.current = setTimeout(async () => {
+      setIsSearchingArea(true)
+      try {
+        const res = await fetch(`/api/shipping/check?search=${encodeURIComponent(value)}`)
+        const data = await res.json()
+        setAreaResults(data.areas || [])
+        setShowAreaDropdown((data.areas || []).length > 0)
+      } catch { setAreaResults([]) } finally { setIsSearchingArea(false) }
+    }, 500)
+  }
+
+  const handleSelectArea = (area: AreaOption) => {
+    setSelectedArea(area)
+    setCityQuery(area.city)
+    setPostalCode(area.postal_code)
+    setShowAreaDropdown(false)
+    setAreaResults([])
+    fetchRates(area.id, variant.quantity)
+  }
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) return
@@ -107,9 +197,21 @@ export default function CheckoutForm({ variants, productName }: Props) {
     const customerName = formData.get('name') as string
     const rawPhone = formData.get('phone') as string
     const address = formData.get('address') as string
-    const city = formData.get('city') as string
-    const postalCode = formData.get('postalCode') as string
     const notes = formData.get('notes') as string
+
+    const city = cityQuery
+    const postal = postalCode
+
+    if (!city) {
+      toast.error('Harap isi kota tujuan')
+      setIsSubmitting(false)
+      return
+    }
+    if (!postal || !/^\d{5}$/.test(postal)) {
+      toast.error('Harap isi kode pos yang valid (5 digit)')
+      setIsSubmitting(false)
+      return
+    }
 
     // Normalize phone: 08xxx → 628xxx
     const customerPhone = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone
@@ -137,7 +239,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
           customerPhone,
           address,
           city,
-          postalCode,
+          postalCode: postal,
           notes: notes || undefined,
           variantId: variant.id || undefined,
           variantName: variant.name,
@@ -203,13 +305,62 @@ export default function CheckoutForm({ variants, productName }: Props) {
                 <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Alamat Lengkap *</label>
                 <textarea name="address" required className="input-field min-h-[80px] resize-none" placeholder="Jl. Nama Jalan No. xx, RT/RW, Kelurahan, Kecamatan" />
               </div>
-              <div>
-                <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Kota *</label>
-                <input type="text" name="city" required className="input-field" placeholder="Jakarta, Bandung, dll." />
+              {/* City autocomplete */}
+              <div ref={cityDropdownRef} className="relative">
+                <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Kota / Kecamatan *</label>
+                <div className="relative">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-jena-gray-medium pointer-events-none" />
+                  <input
+                    type="text"
+                    value={cityQuery}
+                    onChange={(e) => handleCityInput(e.target.value)}
+                    onFocus={() => areaResults.length > 0 && setShowAreaDropdown(true)}
+                    required
+                    className="input-field pl-9"
+                    placeholder="Ketik kota / kecamatan..."
+                    autoComplete="off"
+                  />
+                  {isSearchingArea && (
+                    <svg className="animate-spin absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-jena-gold" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  )}
+                </div>
+                {showAreaDropdown && areaResults.length > 0 && (
+                  <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-jena-gray-light rounded-xl shadow-lg overflow-hidden max-h-56 overflow-y-auto">
+                    {areaResults.map((area) => (
+                      <button
+                        key={area.id}
+                        type="button"
+                        onMouseDown={() => handleSelectArea(area)}
+                        className="w-full flex items-start gap-3 px-4 py-3 hover:bg-jena-ivory text-left border-b border-jena-gray-light/50 last:border-0 transition-colors"
+                      >
+                        <MapPin size={14} className="text-jena-gold mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-sm font-medium text-jena-charcoal">{area.city}</p>
+                          <p className="text-xs text-jena-gray-medium">{area.label}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {selectedArea && (
+                  <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                    <Check size={11} strokeWidth={3} /> {selectedArea.label}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Kode Pos *</label>
-                <input type="text" name="postalCode" required pattern="\d{5}" className="input-field" placeholder="12345" />
+                <input
+                  type="text"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  required
+                  className="input-field"
+                  placeholder="Auto-isi saat pilih kota"
+                />
               </div>
               <div className="sm:col-span-2">
                 <label className="text-xs font-medium text-jena-charcoal mb-1.5 block">Catatan (opsional)</label>
@@ -221,33 +372,55 @@ export default function CheckoutForm({ variants, productName }: Props) {
           {/* Courier */}
           <div className="card p-6">
             <h2 className="heading-3 text-lg text-jena-mocha mb-5">Pilih Kurir</h2>
-            <div className="space-y-2">
-              {COURIER_OPTIONS.map((opt) => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setSelectedCourier(opt.id)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
-                    selectedCourier === opt.id ? 'border-jena-gold bg-jena-gold/5' : 'border-jena-gray-light bg-white'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 ${selectedCourier === opt.id ? 'border-jena-gold bg-jena-gold' : 'border-jena-gray-medium'}`} />
-                    <div className="text-left">
-                      <p className="text-sm font-medium text-jena-charcoal">{opt.name}</p>
-                      <p className="text-xs text-jena-gray-medium">Estimasi {opt.estimate}</p>
-                    </div>
+            {isFreeShipping ? (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-xl text-center">
+                <p className="text-sm font-semibold text-green-700 flex items-center justify-center gap-2">
+                  <Truck size={16} /> Gratis Ongkir untuk 2+ pcs!
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {!isFlatRate && selectedArea && (
+                  <p className="text-xs text-green-600 flex items-center gap-1 mb-2">
+                    <Check size={11} strokeWidth={3} /> Tarif real-time ke {selectedArea.city}
+                  </p>
+                )}
+                {isFlatRate && (
+                  <p className="text-xs text-jena-gray-medium mb-2">
+                    {selectedArea ? 'Menggunakan tarif estimasi. ' : 'Pilih kota untuk tarif real-time. '}
+                    Isi kota terlebih dahulu untuk tarif akurat.
+                  </p>
+                )}
+                {isLoadingRates ? (
+                  <div className="flex items-center gap-2 text-sm text-jena-gray-medium p-3">
+                    <svg className="animate-spin w-4 h-4 text-jena-gold" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Mengambil tarif pengiriman...
                   </div>
-                  <span className="text-sm font-semibold text-jena-mocha">
-                    {isFreeShipping ? <span className="text-green-600 text-xs font-bold">GRATIS</span> : formatRupiah(opt.price)}
-                  </span>
-                </button>
-              ))}
-            </div>
-            {isFreeShipping && (
-              <p className="text-xs text-green-600 mt-3 flex items-center gap-1">
-                <Check size={12} strokeWidth={3} /> Gratis ongkir untuk pembelian 2 tube atau lebih!
-              </p>
+                ) : (
+                  couriers.map(c => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setSelectedCourier(c.id)}
+                      className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                        selectedCourier === c.id ? 'border-jena-gold bg-jena-gold/5' : 'border-jena-gray-light bg-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-4 h-4 rounded-full border-2 ${selectedCourier === c.id ? 'border-jena-gold bg-jena-gold' : 'border-jena-gray-medium'}`} />
+                        <div className="text-left">
+                          <p className="text-sm font-medium text-jena-charcoal">{c.name}</p>
+                          <p className="text-xs text-jena-gray-medium">Estimasi {c.estimate}</p>
+                        </div>
+                      </div>
+                      <span className="text-sm font-semibold text-jena-mocha">{formatRupiah(c.price)}</span>
+                    </button>
+                  ))
+                )}
+              </div>
             )}
           </div>
 
