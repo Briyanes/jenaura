@@ -156,7 +156,12 @@ export default function CheckoutForm({ variants, productName }: Props) {
       })
 
       const data = await response.json()
-      if (!response.ok) throw new Error(data.error || 'Order failed')
+      if (!response.ok) {
+        const msg = data.details
+          ? data.details.map((d: { message: string }) => d.message).join(', ')
+          : data.error || 'Gagal membuat pesanan'
+        throw new Error(msg)
+      }
 
       const orderId = data.order?.order_number || 'PENDING'
       trackPurchase({
@@ -168,8 +173,8 @@ export default function CheckoutForm({ variants, productName }: Props) {
       })
 
       router.push(`/konfirmasi-pesanan?id=${encodeURIComponent(orderId)}`)
-    } catch {
-      toast.error('Gagal membuat pesanan. Silakan coba lagi.')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Gagal membuat pesanan. Silakan coba lagi.')
       setIsSubmitting(false)
     }
   }
@@ -325,23 +330,23 @@ export default function CheckoutForm({ variants, productName }: Props) {
                   </button>
                 </div>
               ) : (
-                <div className="flex gap-2">
+                <div className="flex items-stretch gap-0 border-2 border-jena-gray-light rounded-xl overflow-hidden focus-within:border-jena-gold transition-colors">
                   <div className="flex-1 relative">
-                    <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-jena-gray-medium" />
+                    <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-jena-gray-medium pointer-events-none" />
                     <input
                       type="text"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                       onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleApplyPromo())}
                       placeholder="Kode promo"
-                      className="input-field pl-9 text-sm uppercase"
+                      className="w-full pl-9 pr-3 py-3 text-sm uppercase bg-transparent outline-none text-jena-charcoal placeholder-jena-gray-medium"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={handleApplyPromo}
                     disabled={isApplyingPromo || !promoCode.trim()}
-                    className="btn-ghost text-jena-gold text-xs px-3 disabled:opacity-40"
+                    className="px-4 text-sm font-semibold text-jena-gold border-l border-jena-gray-light hover:bg-jena-gold/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
                   >
                     {isApplyingPromo ? '...' : 'Pakai'}
                   </button>
