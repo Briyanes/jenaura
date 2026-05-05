@@ -407,8 +407,9 @@ html {
 }
 
 /* --- Header Offset Padding --- */
-/* Fixed header = promo bar (~40px) + navbar (64px) ≈ 104px total.
-   Add comfortable breathing room above page content. */
+/* Fixed header = promo bar (~40px) + navbar (64px) ≈ 104px total. */
+
+/* Hero homepage — dramatic spacing */
 .header-pt {
   padding-top: 12rem; /* 192px — mobile */
 }
@@ -419,6 +420,21 @@ html {
 }
 @media (min-width: 1024px) {
   .header-pt {
+    padding-top: 8rem; /* 128px — desktop */
+  }
+}
+
+/* Inner pages — clear header + comfortable breathing room */
+.header-pt-page {
+  padding-top: 7rem; /* 112px — mobile */
+}
+@media (min-width: 640px) {
+  .header-pt-page {
+    padding-top: 7.5rem; /* 120px — tablet */
+  }
+}
+@media (min-width: 1024px) {
+  .header-pt-page {
     padding-top: 8rem; /* 128px — desktop */
   }
 }
