@@ -14,7 +14,7 @@ interface BiteshipArea {
   administrative_division_level_1_name: string
   administrative_division_level_2_name: string
   administrative_division_level_3_name: string
-  postal_code: string
+  postal_code: string | number
 }
 
 interface BiteshipPricing {
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         label: `${a.administrative_division_level_3_name}, ${a.administrative_division_level_2_name}, ${a.administrative_division_level_1_name}`,
         city: a.administrative_division_level_2_name,
         province: a.administrative_division_level_1_name,
-        postal_code: a.postal_code,
+        postal_code: String(a.postal_code),
       })),
     })
   } catch {
