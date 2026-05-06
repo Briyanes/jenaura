@@ -74,7 +74,7 @@ export default function SiteHeader() {
             scrolled ? 'max-h-0' : 'max-h-10'
           }`}
         >
-          <div className="animate-marquee whitespace-nowrap py-2 text-xs font-medium tracking-wide">
+          <div className="animate-marquee whitespace-nowrap py-2 text-sm font-medium tracking-wide">
             {[...Array(4)].map((_, i) => (
               <span key={i} className="inline-flex items-center">
                 {PROMO_ITEMS.map((item, j) => (
