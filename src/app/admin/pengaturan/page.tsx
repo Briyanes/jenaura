@@ -19,11 +19,10 @@ const SECTIONS: SettingSection[] = [
     ],
   },
   {
-    title: 'RajaOngkir (Ongkos Kirim)',
+    title: 'Biteship (Ongkos Kirim)',
     icon: <Truck size={16} className="text-jena-gold" />,
     fields: [
-      { label: 'API Key', key: 'rajaongkir_key', type: 'password', placeholder: 'API key RajaOngkir' },
-      { label: 'Kota Asal', key: 'rajaongkir_city', type: 'text', placeholder: 'Contoh: Jakarta' },
+      { label: 'API Key', key: 'biteship_key', type: 'password', placeholder: 'API key Biteship' },
     ],
   },
   {

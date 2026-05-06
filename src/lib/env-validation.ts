@@ -15,7 +15,6 @@ export function validateEnv() {
     duitkuMerchantCode: getEnvVar('DUITKU_MERCHANT_CODE', ''),
     duitkuApiKey: getEnvVar('DUITKU_API_KEY', ''),
     duitkuIsSandbox: process.env.DUITKU_IS_SANDBOX === 'true',
-    rajaongkirApiKey: getEnvVar('RAJAONGKIR_API_KEY', ''),
     biteshipApiKey: getEnvVar('BITESHIP_API_KEY', ''),
     biteshipOriginAreaId: getEnvVar('BITESHIP_ORIGIN_AREA_ID', ''),
     whatsappNumber: getEnvVar('NEXT_PUBLIC_WHATSAPP_NUMBER', '6281231600479'),
