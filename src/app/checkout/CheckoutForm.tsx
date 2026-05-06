@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { Landmark, QrCode, Wallet, Truck, Shield, Tag, Check, X, Search, MapPin } from 'lucide-react'
-import { HERO_PRODUCT, COURIER_OPTIONS, PAYMENT_METHODS } from '@/lib/mock-data'
+import { Landmark, QrCode, Wallet, Truck, Shield, Tag, Check, X, Search, MapPin, ChevronDown } from 'lucide-react'
+import { HERO_PRODUCT, COURIER_OPTIONS } from '@/lib/mock-data'
 import { formatRupiah } from '@/lib/utils'
 import { trackInitiateCheckout, trackAddPaymentInfo, trackPurchase } from '@/lib/tracking'
 import type { CheckoutVariant } from './page'
@@ -42,6 +42,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0)
   const [selectedCourier, setSelectedCourier] = useState('jne_reg')
   const [selectedPayment, setSelectedPayment] = useState('bca_va')
+  const [openPaymentCategory, setOpenPaymentCategory] = useState<string | null>('va')
   const [promoCode, setPromoCode] = useState('')
   const [promoApplied, setPromoApplied] = useState(false)
   const [promoDiscount, setPromoDiscount] = useState(0)
@@ -443,30 +444,126 @@ export default function CheckoutForm({ variants, productName }: Props) {
           {/* Payment */}
           <div className="card p-6">
             <h2 className="heading-3 text-lg text-jena-mocha mb-5">Metode Pembayaran</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
-              {PAYMENT_METHODS.map((method) => {
-                const icons: Record<string, typeof Landmark> = {
-                  bca_va: Landmark, bri_va: Landmark, mandiri_va: Landmark, bni_va: Landmark,
-                  qris: QrCode, dana: Wallet, ovo: Wallet, cod: Truck
-                }
-                const Icon = icons[method.id] || Wallet
-                return (
-                  <button
-                    key={method.id}
-                    type="button"
-                    onClick={() => setSelectedPayment(method.id)}
-                    className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${
-                      selectedPayment === method.id ? 'border-jena-gold bg-jena-gold/5' : 'border-jena-gray-light bg-white'
-                    }`}
-                  >
-                    <Icon size={20} className="text-jena-gold flex-shrink-0" strokeWidth={1.5} />
+            <div className="space-y-3">
+
+              {/* Virtual Account */}
+              <div className="rounded-xl border-2 overflow-hidden transition-colors border-jena-gray-light">
+                <button
+                  type="button"
+                  onClick={() => setOpenPaymentCategory(openPaymentCategory === 'va' ? null : 'va')}
+                  className={`w-full flex items-center justify-between p-4 text-left transition-colors ${
+                    openPaymentCategory === 'va' ? 'bg-jena-gold/5' : 'bg-white hover:bg-jena-cream/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Landmark size={20} className="text-jena-gold flex-shrink-0" strokeWidth={1.5} />
                     <div>
-                      <p className="text-sm font-medium text-jena-charcoal">{method.name}</p>
-                      <p className="text-xs text-jena-gray-medium">{method.description}</p>
+                      <p className="text-sm font-semibold text-jena-charcoal">Virtual Account</p>
+                      <p className="text-xs text-jena-gray-medium">Transfer ke no. rekening virtual</p>
                     </div>
-                  </button>
-                )
-              })}
+                  </div>
+                  <ChevronDown size={16} className={`text-jena-gray-medium transition-transform ${openPaymentCategory === 'va' ? 'rotate-180' : ''}`} />
+                </button>
+                {openPaymentCategory === 'va' && (
+                  <div className="border-t border-jena-gray-light p-3 grid grid-cols-2 gap-2 bg-jena-cream/30">
+                    {[
+                      { id: 'bca_va', label: 'BCA' },
+                      { id: 'bri_va', label: 'BRI' },
+                      { id: 'mandiri_va', label: 'Mandiri' },
+                      { id: 'bni_va', label: 'BNI' },
+                    ].map(bank => (
+                      <button
+                        key={bank.id}
+                        type="button"
+                        onClick={() => setSelectedPayment(bank.id)}
+                        className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-sm font-medium ${
+                          selectedPayment === bank.id
+                            ? 'border-jena-gold bg-jena-gold/10 text-jena-mocha'
+                            : 'border-jena-gray-light bg-white text-jena-charcoal hover:border-jena-gold/50'
+                        }`}
+                      >
+                        {selectedPayment === bank.id && <Check size={14} className="text-jena-gold flex-shrink-0" />}
+                        VA {bank.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* QRIS */}
+              <button
+                type="button"
+                onClick={() => { setSelectedPayment('qris'); setOpenPaymentCategory('qris') }}
+                className={`w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${
+                  selectedPayment === 'qris' ? 'border-jena-gold bg-jena-gold/5' : 'border-jena-gray-light bg-white hover:bg-jena-cream/50'
+                }`}
+              >
+                <QrCode size={20} className="text-jena-gold flex-shrink-0" strokeWidth={1.5} />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-jena-charcoal">QRIS</p>
+                  <p className="text-xs text-jena-gray-medium">Scan QR — GoPay, DANA, OVO, ShopeePay, dll</p>
+                </div>
+                {selectedPayment === 'qris' && <Check size={16} className="text-jena-gold flex-shrink-0" />}
+              </button>
+
+              {/* E-Wallet */}
+              <div className="rounded-xl border-2 overflow-hidden transition-colors border-jena-gray-light">
+                <button
+                  type="button"
+                  onClick={() => setOpenPaymentCategory(openPaymentCategory === 'ewallet' ? null : 'ewallet')}
+                  className={`w-full flex items-center justify-between p-4 text-left transition-colors ${
+                    openPaymentCategory === 'ewallet' ? 'bg-jena-gold/5' : 'bg-white hover:bg-jena-cream/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Wallet size={20} className="text-jena-gold flex-shrink-0" strokeWidth={1.5} />
+                    <div>
+                      <p className="text-sm font-semibold text-jena-charcoal">E-Wallet</p>
+                      <p className="text-xs text-jena-gray-medium">Bayar langsung dari dompet digital</p>
+                    </div>
+                  </div>
+                  <ChevronDown size={16} className={`text-jena-gray-medium transition-transform ${openPaymentCategory === 'ewallet' ? 'rotate-180' : ''}`} />
+                </button>
+                {openPaymentCategory === 'ewallet' && (
+                  <div className="border-t border-jena-gray-light p-3 grid grid-cols-2 gap-2 bg-jena-cream/30">
+                    {[
+                      { id: 'dana', label: 'DANA' },
+                      { id: 'ovo', label: 'OVO' },
+                    ].map(ew => (
+                      <button
+                        key={ew.id}
+                        type="button"
+                        onClick={() => setSelectedPayment(ew.id)}
+                        className={`flex items-center gap-2 p-3 rounded-lg border-2 transition-all text-sm font-medium ${
+                          selectedPayment === ew.id
+                            ? 'border-jena-gold bg-jena-gold/10 text-jena-mocha'
+                            : 'border-jena-gray-light bg-white text-jena-charcoal hover:border-jena-gold/50'
+                        }`}
+                      >
+                        {selectedPayment === ew.id && <Check size={14} className="text-jena-gold flex-shrink-0" />}
+                        {ew.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* COD */}
+              <button
+                type="button"
+                onClick={() => { setSelectedPayment('cod'); setOpenPaymentCategory('cod') }}
+                className={`w-full flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${
+                  selectedPayment === 'cod' ? 'border-jena-gold bg-jena-gold/5' : 'border-jena-gray-light bg-white hover:bg-jena-cream/50'
+                }`}
+              >
+                <Truck size={20} className="text-jena-gold flex-shrink-0" strokeWidth={1.5} />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-jena-charcoal">COD — Bayar di Tempat</p>
+                  <p className="text-xs text-jena-gray-medium">Bayar tunai saat barang tiba</p>
+                </div>
+                {selectedPayment === 'cod' && <Check size={16} className="text-jena-gold flex-shrink-0" />}
+              </button>
+
             </div>
           </div>
         </div>

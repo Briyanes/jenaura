@@ -12,7 +12,7 @@ export const orderSchema = z.object({
   variantId: z.string().optional(),
   quantity: z.number().min(1).max(10),
   courier: z.string().min(1, 'Pilih kurir pengiriman'),
-  paymentMethod: z.enum(['bank_transfer', 'qris', 'ewallet', 'cod']),
+  paymentMethod: z.enum(['bca_va', 'bri_va', 'mandiri_va', 'bni_va', 'qris', 'dana', 'ovo', 'cod']),
   promoCode: z.string().optional(),
   notes: z.string().optional(),
 })
