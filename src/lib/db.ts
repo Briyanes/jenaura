@@ -151,7 +151,10 @@ export async function createOrder(data: CreateOrderData) {
     .select()
     .single()
 
-  if (error) throw new Error(error.message || JSON.stringify(error))
+  if (error) {
+    console.error('createOrder Supabase error:', JSON.stringify(error))
+    throw new Error(error.message || JSON.stringify(error))
+  }
   return order
 }
 
