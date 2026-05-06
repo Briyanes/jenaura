@@ -65,31 +65,44 @@ export async function POST(request: NextRequest) {
       expiryPeriod: 60,
     }
 
+    console.log('Duitku request:', JSON.stringify({ ...payload, signature: '***' }))
     const res = await fetch(duitkuUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     })
 
-    const data = await res.json()
+    const rawText = await res.text()
+    console.log('Duitku raw response:', res.status, rawText.slice(0, 500))
+
+    let data: Record<string, unknown>
+    try {
+      data = JSON.parse(rawText)
+    } catch {
+      return NextResponse.json(
+        { error: 'Respons tidak valid dari payment gateway', debug: rawText.slice(0, 200) },
+        { status: 502 }
+      )
+    }
 
     if (!res.ok || data.statusCode !== '00') {
       console.error('Duitku error:', JSON.stringify(data))
       return NextResponse.json(
-        { error: data.statusMessage || 'Gagal membuat transaksi pembayaran', debug: data },
+        { error: (data.statusMessage as string) || (data.Message as string) || 'Gagal membuat transaksi pembayaran', debug: data },
         { status: 400 }
       )
     }
 
     // Store Duitku reference in order
-    await updateOrderPayment(orderNumber, data.reference)
+    await updateOrderPayment(orderNumber, data.reference as string)
 
     return NextResponse.json({
       paymentUrl: data.paymentUrl,
       reference: data.reference,
     })
   } catch (err) {
-    console.error('Payment create error:', err)
-    return NextResponse.json({ error: 'Gagal memproses pembayaran', debug: String(err) }, { status: 500 })
+    const msg = err instanceof Error ? err.message : JSON.stringify(err)
+    console.error('Payment create error:', msg, err)
+    return NextResponse.json({ error: 'Gagal memproses pembayaran', debug: msg }, { status: 500 })
   }
 }
