@@ -92,7 +92,6 @@ export async function POST(request: NextRequest) {
     })
 
     const data = await res.json()
-    console.log('[Biteship] Response success:', data.success, 'status:', res.status)
     if (!data.success) throw new Error(`Biteship rates error: ${JSON.stringify(data)}`)
 
     const allPricing = (data.pricing as BiteshipPricing[])
@@ -108,18 +107,13 @@ export async function POST(request: NextRequest) {
       }))
 
     if (!pricing.length) {
-      return NextResponse.json({ 
-        success: true, fallback: true, fallback_reason: 'no_available_rates',
-        debug_total: allPricing.length,
-        debug_sample: allPricing.slice(0, 2),
-        pricing: FLAT_RATES 
-      })
+      return NextResponse.json({ success: true, fallback: true, fallback_reason: 'no_available_rates', pricing: FLAT_RATES })
     }
 
     return NextResponse.json({ success: true, pricing })
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err)
     console.error('[Biteship] Error:', errMsg)
-    return NextResponse.json({ success: true, fallback: true, fallback_reason: 'api_error', error_debug: errMsg, pricing: FLAT_RATES })
+    return NextResponse.json({ success: true, fallback: true, fallback_reason: 'api_error', pricing: FLAT_RATES })
   }
 }

@@ -19,8 +19,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { orderNumber, amount, customerName, customerPhone, paymentMethod } = body
 
-    console.log('Payment create:', { orderNumber, amount, paymentMethod })
-
     if (!orderNumber || !amount || !customerName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
@@ -67,7 +65,6 @@ export async function POST(request: NextRequest) {
       expiryPeriod: 60,
     }
 
-    console.log('Duitku request:', JSON.stringify({ ...payload, signature: '***' }))
     const res = await fetch(duitkuUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -75,14 +72,14 @@ export async function POST(request: NextRequest) {
     })
 
     const rawText = await res.text()
-    console.log('Duitku raw response:', res.status, rawText.slice(0, 500))
 
     let data: Record<string, unknown>
     try {
       data = JSON.parse(rawText)
     } catch {
+      console.error('Duitku non-JSON response:', res.status, rawText.slice(0, 200))
       return NextResponse.json(
-        { error: 'Respons tidak valid dari payment gateway', debug: rawText.slice(0, 200) },
+        { error: 'Respons tidak valid dari payment gateway' },
         { status: 502 }
       )
     }
@@ -90,23 +87,20 @@ export async function POST(request: NextRequest) {
     if (!res.ok || data.statusCode !== '00') {
       console.error('Duitku error:', JSON.stringify(data))
       return NextResponse.json(
-        { error: (data.statusMessage as string) || (data.Message as string) || 'Gagal membuat transaksi pembayaran', debug: data },
+        { error: (data.statusMessage as string) || (data.Message as string) || 'Gagal membuat transaksi pembayaran' },
         { status: 400 }
       )
     }
 
-    console.log('Duitku success response keys:', Object.keys(data), 'reference:', data.reference)
-
     // Store Duitku reference in order (non-blocking)
-    await updateOrderPayment(orderNumber, (data.reference as string) || (data.merchantOrderId as string) || orderNumber)
+    await updateOrderPayment(orderNumber, (data.reference as string) || orderNumber)
 
     return NextResponse.json({
       paymentUrl: data.paymentUrl,
       reference: data.reference,
     })
   } catch (err) {
-    const msg = err instanceof Error ? err.message : JSON.stringify(err)
-    console.error('Payment create error:', msg, err)
-    return NextResponse.json({ error: 'Gagal memproses pembayaran', debug: msg }, { status: 500 })
+    console.error('Payment create error:', err)
+    return NextResponse.json({ error: 'Gagal memproses pembayaran' }, { status: 500 })
   }
 }
