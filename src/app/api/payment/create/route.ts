@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { updateOrderPayment } from '@/lib/db'
 
-// Duitku payment channel codes (from getpaymentmethod API)
+// Duitku payment channel codes (from getpaymentmethod API for merchant DS30359)
 const PAYMENT_METHOD_MAP: Record<string, string> = {
-  bank_transfer: 'BR',   // BRI VA (BRIVA)
-  qris: 'SP',            // ShopeePay QRIS
-  ewallet: 'DA',         // DANA
-  cod: '',               // COD - skip Duitku
+  bca_va: 'BC',      // BCA Virtual Account
+  bri_va: 'BR',      // BRI Virtual Account
+  mandiri_va: 'M2',  // Mandiri VA H2H
+  bni_va: 'I1',      // BNI Virtual Account
+  qris: 'SP',        // ShopeePay QRIS (universal QRIS)
+  dana: 'DA',        // DANA
+  ovo: 'OV',         // OVO
+  cod: '',           // COD - skip Duitku
 }
 
 export async function POST(request: NextRequest) {
@@ -27,7 +31,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Payment gateway not configured' }, { status: 500 })
     }
 
-    const duitkuChannel = PAYMENT_METHOD_MAP[paymentMethod as string] || 'BRIVA'
+    const duitkuChannel = PAYMENT_METHOD_MAP[paymentMethod as string] || 'BC'
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || request.nextUrl.origin
     const duitkuUrl = isSandbox

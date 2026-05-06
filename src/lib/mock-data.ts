@@ -173,10 +173,14 @@ export const COURIER_OPTIONS = [
 ]
 
 export const PAYMENT_METHODS = [
-  { id: 'bank_transfer', name: 'Transfer Bank', description: 'BCA / BRI / BNI', icon: 'landmark' },
-  { id: 'qris', name: 'QRIS', description: 'Scan QR dari aplikasi manapun', icon: 'qr-code' },
-  { id: 'ewallet', name: 'E-Wallet', description: 'GoPay / OVO / Dana', icon: 'wallet' },
-  { id: 'cod', name: 'COD', description: 'Bayar di tempat', icon: 'hand-coins' },
+  { id: 'bca_va', name: 'BCA Virtual Account', description: 'Transfer via ATM / m-BCA / KlikBCA', icon: 'landmark' },
+  { id: 'bri_va', name: 'BRI Virtual Account', description: 'Transfer via ATM / BRImo / BRI', icon: 'landmark' },
+  { id: 'mandiri_va', name: 'Mandiri Virtual Account', description: 'Transfer via ATM / Livin / Mandiri', icon: 'landmark' },
+  { id: 'bni_va', name: 'BNI Virtual Account', description: 'Transfer via ATM / BNI Mobile', icon: 'landmark' },
+  { id: 'qris', name: 'QRIS', description: 'Bayar pakai GoPay / DANA / OVO / dll', icon: 'qr-code' },
+  { id: 'dana', name: 'DANA', description: 'Bayar langsung via DANA', icon: 'wallet' },
+  { id: 'ovo', name: 'OVO', description: 'Bayar langsung via OVO', icon: 'wallet' },
+  { id: 'cod', name: 'COD', description: 'Bayar di tempat saat barang tiba', icon: 'hand-coins' },
 ]
 
 export const SOCIAL_LINKS = {

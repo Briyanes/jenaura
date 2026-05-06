@@ -41,7 +41,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
 
   const [selectedVariantIdx, setSelectedVariantIdx] = useState(0)
   const [selectedCourier, setSelectedCourier] = useState('jne_reg')
-  const [selectedPayment, setSelectedPayment] = useState('bank_transfer')
+  const [selectedPayment, setSelectedPayment] = useState('bca_va')
   const [promoCode, setPromoCode] = useState('')
   const [promoApplied, setPromoApplied] = useState(false)
   const [promoDiscount, setPromoDiscount] = useState(0)
@@ -445,7 +445,10 @@ export default function CheckoutForm({ variants, productName }: Props) {
             <h2 className="heading-3 text-lg text-jena-mocha mb-5">Metode Pembayaran</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {PAYMENT_METHODS.map((method) => {
-                const icons: Record<string, typeof Landmark> = { bank_transfer: Landmark, qris: QrCode, ewallet: Wallet, cod: Truck }
+                const icons: Record<string, typeof Landmark> = {
+                  bca_va: Landmark, bri_va: Landmark, mandiri_va: Landmark, bni_va: Landmark,
+                  qris: QrCode, dana: Wallet, ovo: Wallet, cod: Truck
+                }
                 const Icon = icons[method.id] || Wallet
                 return (
                   <button
