@@ -273,7 +273,26 @@ export default function CheckoutForm({ variants, productName }: Props) {
         numItems: variant.quantity,
       })
 
-      router.push(`/konfirmasi-pesanan?id=${encodeURIComponent(orderId)}`)
+      if (selectedPayment !== 'cod') {
+        // Redirect to Duitku payment page
+        const paymentRes = await fetch('/api/payment/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderNumber: orderId,
+            amount: total,
+            customerName,
+            customerPhone,
+          }),
+        })
+        const paymentData = await paymentRes.json()
+        if (!paymentRes.ok) {
+          throw new Error(paymentData.error || 'Gagal membuat transaksi pembayaran')
+        }
+        window.location.href = paymentData.paymentUrl
+      } else {
+        router.push(`/konfirmasi-pesanan?id=${encodeURIComponent(orderId)}`)
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Gagal membuat pesanan. Silakan coba lagi.')
       setIsSubmitting(false)

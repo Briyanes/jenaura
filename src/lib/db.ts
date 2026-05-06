@@ -186,6 +186,42 @@ export async function updateOrderStatus(orderId: string, status: Order['status']
   return data
 }
 
+export async function updateOrderPayment(orderNumber: string, reference: string) {
+  const client = checkSupabase()
+  const { data, error } = await client
+    .from('orders')
+    .update({ midtrans_transaction_id: reference, updated_at: new Date().toISOString() })
+    .eq('order_number', orderNumber)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function updateOrderPaymentStatus(
+  orderNumber: string,
+  paymentStatus: string,
+  status?: string
+) {
+  const client = checkSupabase()
+  const updates: Record<string, string> = {
+    payment_status: paymentStatus,
+    updated_at: new Date().toISOString(),
+  }
+  if (status) updates.status = status
+
+  const { data, error } = await client
+    .from('orders')
+    .update(updates)
+    .eq('order_number', orderNumber)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
 export async function getOrders(limit = 50, offset = 0) {
   const client = checkSupabase()
   const { data, error } = await client
