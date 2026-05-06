@@ -3,7 +3,7 @@ import type { Product, Review, FAQ } from '@/types'
 export const HERO_PRODUCT: Product = {
   id: 'prod_001',
   name: 'JENAURA Leave-In Keratin Hair Treatment',
-  slug: 'jenaura-keratin-no-wash-treatment',
+  slug: 'jenaura-leave-in-keratin-hair-treatment',
   description:
     'Leave-in treatment dengan Hydrolyzed Keratin, Hydrolyzed Silk, dan Argan Oil. Oleskan setelah keramas — tidak perlu dibilas. Rambut terasa lebih lembut dan mudah diatur mulai pemakaian pertama.',
   shortDescription:
@@ -190,9 +190,9 @@ export const SOCIAL_LINKS = {
 export const NAV_LINKS = [
   {
     label: 'Produk',
-    href: '/produk/jenaura-keratin-no-wash-treatment',
+    href: '/produk/jenaura-leave-in-keratin-hair-treatment',
     children: [
-      { label: 'Leave-In Keratin Hair Treatment', href: '/produk/jenaura-keratin-no-wash-treatment' },
+      { label: 'Leave-In Keratin Hair Treatment', href: '/produk/jenaura-leave-in-keratin-hair-treatment' },
     ],
   },
   { label: 'Cara Pakai', href: '/cara-pakai' },
