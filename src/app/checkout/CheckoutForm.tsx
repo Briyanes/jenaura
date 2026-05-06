@@ -39,9 +39,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
   const cityDropdownRef = useRef<HTMLDivElement>(null)
   const citySearchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const [selectedVariantIdx, setSelectedVariantIdx] = useState(() =>
-    variants.length >= 3 ? 2 : variants.length - 1
-  )
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0)
   const [selectedCourier, setSelectedCourier] = useState('jne_reg')
   const [selectedPayment, setSelectedPayment] = useState('bank_transfer')
   const [promoCode, setPromoCode] = useState('')
