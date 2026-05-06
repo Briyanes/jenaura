@@ -55,10 +55,10 @@ export default async function HomePage() {
     <main>
 
       {/* ========== HERO ========== */}
-      <section className="relative w-full sm:min-h-screen flex items-start justify-center overflow-hidden">
+      <section className="relative w-full sm:min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background image */}
         <div
-          className="absolute inset-0 bg-cover bg-top bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/image-hero.webp')" }}
         />
         {/* Dark overlay agar teks terbaca */}
@@ -81,16 +81,15 @@ export default async function HomePage() {
 
               {/* Headline */}
               <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white leading-[1.15] mb-6 font-bold">
-                Anti-Kesat<br className="hidden sm:block" /> Sehabis Keramas,{' '}
+                Anti Kusut Sehabis Keramas —{' '}
                 <em className="not-italic text-transparent bg-clip-text bg-gradient-to-r from-jena-gold via-jena-peach to-jena-gold">
-                  Tanpa Bilas!
+                  Rambut Langsung Halus Tanpa Bilas
                 </em>
               </h1>
 
               {/* Subtext */}
               <p className="text-white/65 text-base sm:text-lg mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-                Keratin No-Wash Treatment yang bikin rambut lembut dan halus seketika.
-                Hasil salon — bisa kamu lakukan sendiri di rumah.
+                Keratin No-Wash Treatment yang bantu rambut jadi lebih halus, lembut, dan mudah diatur seketika.
               </p>
 
               {/* Price Box */}
