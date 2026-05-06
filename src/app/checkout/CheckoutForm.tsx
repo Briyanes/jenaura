@@ -281,6 +281,7 @@ export default function CheckoutForm({ variants, productName }: Props) {
             amount: total,
             customerName,
             customerPhone,
+            paymentMethod: selectedPayment,
           }),
         })
         const paymentData = await paymentRes.json()

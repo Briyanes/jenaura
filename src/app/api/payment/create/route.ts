@@ -2,10 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { updateOrderPayment } from '@/lib/db'
 
+// Duitku payment channel codes
+const PAYMENT_METHOD_MAP: Record<string, string> = {
+  bank_transfer: 'BRIVA', // BRI Virtual Account (widely available in sandbox)
+  qris: 'SP',             // ShopeePay (sandbox QRIS equivalent)
+  ewallet: 'DA',          // DANA
+  cod: '',                // COD - skip Duitku
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { orderNumber, amount, customerName, customerPhone } = body
+    const { orderNumber, amount, customerName, customerPhone, paymentMethod } = body
 
     if (!orderNumber || !amount || !customerName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -18,6 +26,8 @@ export async function POST(request: NextRequest) {
     if (!merchantCode || !apiKey) {
       return NextResponse.json({ error: 'Payment gateway not configured' }, { status: 500 })
     }
+
+    const duitkuChannel = PAYMENT_METHOD_MAP[paymentMethod as string] || 'BRIVA'
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || request.nextUrl.origin
     const duitkuUrl = isSandbox
@@ -32,6 +42,7 @@ export async function POST(request: NextRequest) {
     const payload = {
       merchantCode,
       paymentAmount: amount,
+      paymentMethod: duitkuChannel,
       merchantOrderId: orderNumber,
       productDetails: 'JENAURA Leave-In Keratin Hair Treatment',
       customerVaName: customerName,
@@ -61,10 +72,7 @@ export async function POST(request: NextRequest) {
     if (!res.ok || data.statusCode !== '00') {
       console.error('Duitku error:', JSON.stringify(data))
       return NextResponse.json(
-        {
-          error: data.statusMessage || 'Gagal membuat transaksi pembayaran',
-          debug: process.env.NODE_ENV !== 'production' ? data : undefined,
-        },
+        { error: data.statusMessage || 'Gagal membuat transaksi pembayaran', debug: data },
         { status: 400 }
       )
     }
@@ -78,6 +86,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (err) {
     console.error('Payment create error:', err)
-    return NextResponse.json({ error: 'Gagal memproses pembayaran' }, { status: 500 })
+    return NextResponse.json({ error: 'Gagal memproses pembayaran', debug: String(err) }, { status: 500 })
   }
 }
