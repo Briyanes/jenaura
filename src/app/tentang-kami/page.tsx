@@ -54,24 +54,6 @@ export default function TentangKamiPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-8 lg:py-12 bg-jena-charcoal">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-3 gap-3 lg:gap-6 text-center">
-            {[
-              { num: '1000+', label: 'Pelanggan Puas' },
-              { num: '4.9/5', label: 'Rating' },
-              { num: '30+', label: 'Kota' },
-            ].map(({ num, label }) => (
-              <div key={label} className="bg-white/[0.05] border border-white/[0.08] rounded-2xl p-5 lg:py-8 hover:border-jena-gold/30 transition-colors">
-                <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-jena-gold">{num}</p>
-                <p className="text-sm text-white/40 mt-1">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="py-8 lg:py-14 bg-jena-ivory">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between">
