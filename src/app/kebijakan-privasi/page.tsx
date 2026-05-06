@@ -6,7 +6,7 @@ export default function PrivacyPage() {
   const sections = [
     { title: '1. Informasi yang Kami Kumpulkan', body: 'Saat kamu melakukan pembelian, kami mengumpulkan: nama lengkap, alamat pengiriman, nomor WhatsApp, dan informasi pembayaran. Kami juga mengumpulkan data browsing melalui cookies untuk meningkatkan pengalaman belanja.' },
     { title: '2. Penggunaan Informasi', body: 'Informasi kamu digunakan untuk: memproses pesanan, mengirim update pengiriman, memberikan layanan pelanggan, dan mengirimkan penawaran eksklusif (dengan persetujuan kamu).' },
-    { title: '3. Perlindungan Data', body: 'Kami menggunakan enkripsi SSL dan standar keamanan industri untuk melindungi data pribadi kamu. Data pembayaran diproses oleh payment gateway terpercaya (Midtrans) dan tidak disimpan di server kami.' },
+    { title: '3. Perlindungan Data', body: 'Kami menggunakan enkripsi SSL dan standar keamanan industri untuk melindungi data pribadi kamu. Data pembayaran diproses oleh payment gateway terpercaya (Duitku) dan tidak disimpan di server kami.' },
     { title: '4. Cookies & Tracking', body: 'Kami menggunakan Facebook Pixel dan TikTok Pixel untuk mengukur efektivitas iklan. Kamu bisa menonaktifkan cookies melalui pengaturan browser.' },
     { title: '5. Hubungi Kami', body: 'Jika ada pertanyaan tentang kebijakan privasi ini, hubungi kami melalui WhatsApp atau email hello@jenaura.id.' },
   ]

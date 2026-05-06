@@ -11,11 +11,11 @@ interface SettingSection {
 
 const SECTIONS: SettingSection[] = [
   {
-    title: 'Midtrans Payment Gateway',
+    title: 'Duitku Payment Gateway',
     icon: <CreditCard size={16} className="text-jena-gold" />,
     fields: [
-      { label: 'Server Key', key: 'midtrans_server', type: 'password', placeholder: 'SB-Mid-server-...' },
-      { label: 'Client Key', key: 'midtrans_client', type: 'text', placeholder: 'SB-Mid-client-...' },
+      { label: 'Merchant Code', key: 'duitku_merchant', type: 'text', placeholder: 'DS XXXXX' },
+      { label: 'API Key', key: 'duitku_api', type: 'password', placeholder: 'API Key Duitku' },
     ],
   },
   {

@@ -190,7 +190,7 @@ export async function updateOrderPayment(orderNumber: string, reference: string)
   const client = checkSupabase()
   const { data, error } = await client
     .from('orders')
-    .update({ midtrans_transaction_id: reference, updated_at: new Date().toISOString() })
+    .update({ payment_reference: reference, updated_at: new Date().toISOString() })
     .eq('order_number', orderNumber)
     .select()
     .maybeSingle()
