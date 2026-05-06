@@ -97,14 +97,14 @@ export async function POST(request: NextRequest) {
 
     const allPricing = (data.pricing as BiteshipPricing[])
     const pricing = allPricing
-      .filter((p) => p.available)
+      .filter((p) => p.price > 0)
       .sort((a, b) => a.price - b.price)
       .slice(0, 5)
       .map((p) => ({
         id: `${p.courier_code}_${p.courier_service_code}`.toLowerCase(),
         name: `${p.courier_name} ${p.courier_service_name}`,
         price: p.price,
-        estimate: `${p.duration} hari`,
+        estimate: p.duration ? p.duration.replace('days', 'hari').replace('day', 'hari') : '2-4 hari',
       }))
 
     if (!pricing.length) {
