@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
         destination_area_id,
         couriers: 'jne,jnt,sicepat,anteraja',
         items: [{
-          name: 'JENAURA Keratin No-Wash Treatment',
+          name: 'JENAURA Leave-In Keratin Hair Treatment',
           value: 149000,
           length: 5,
           width: 5,

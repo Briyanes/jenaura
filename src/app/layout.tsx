@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: '%s | JENAURA',
   },
   description:
-    'JENAURA adalah leave-in treatment profesional yang bisa kamu pakai sendiri di rumah. Keratin No-Wash Treatment dengan Hydrolyzed Keratin, Silk & Argan Oil.',
+    'JENAURA adalah leave-in treatment profesional yang bisa kamu pakai sendiri di rumah. Leave-In Keratin Hair Treatment dengan Hydrolyzed Keratin, Silk & Argan Oil.',
   keywords: [
     'hair treatment', 'keratin treatment', 'perawatan rambut', 'hair care',
     'leave in treatment', 'jenaura', 'no wash treatment', 'keratin no wash',
@@ -42,13 +42,13 @@ export const metadata: Metadata = {
     siteName: 'JENAURA',
     title: 'JENAURA — Hair Treatment At Home',
     description:
-      'Keratin No-Wash Treatment untuk rambut yang bercahaya. Tanpa bilas. Tanpa ribet.',
+      'Leave-In Keratin Hair Treatment untuk rambut yang bercahaya. Tanpa bilas. Tanpa ribet.',
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'JENAURA Hair Treatment' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'JENAURA — Hair Treatment At Home',
-    description: 'Keratin No-Wash Treatment untuk rambut yang bercahaya.',
+    description: 'Leave-In Keratin Hair Treatment untuk rambut yang bercahaya.',
     images: ['/og-image.jpg'],
   },
   robots: {

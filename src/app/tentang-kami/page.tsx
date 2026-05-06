@@ -28,7 +28,7 @@ export default function TentangKamiPage() {
             <div className="space-y-4 text-lg text-jena-charcoal/65 leading-relaxed mb-8 lg:mb-0">
               <p><strong className="text-jena-mocha">JENAURA</strong> lahir dari pertanyaan sederhana: mengapa perawatan rambut profesional harus selalu dilakukan di salon?</p>
               <p>Kami percaya setiap wanita Indonesia berhak merasakan rambut sehat, bercahaya, dan mudah diatur — tanpa biaya mahal atau waktu berjam-jam di salon.</p>
-              <p>Itulah mengapa kami menciptakan <strong className="text-jena-mocha">JENAURA Keratin No-Wash Treatment</strong> — leave-in treatment dengan bahan premium: Hydrolyzed Keratin, Hydrolyzed Silk, dan Argan Oil. Tanpa bilas. Hasilnya terasa mulai pemakaian pertama.</p>
+              <p>Itulah mengapa kami menciptakan <strong className="text-jena-mocha">JENAURA Leave-In Keratin Hair Treatment</strong> — leave-in treatment dengan bahan premium: Hydrolyzed Keratin, Hydrolyzed Silk, dan Argan Oil. Tanpa bilas. Hasilnya terasa mulai pemakaian pertama.</p>
             </div>
 
             {/* Value cards */}

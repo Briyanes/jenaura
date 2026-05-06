@@ -2,12 +2,12 @@ import type { Product, Review, FAQ } from '@/types'
 
 export const HERO_PRODUCT: Product = {
   id: 'prod_001',
-  name: 'JENAURA Keratin No-Wash Treatment',
+  name: 'JENAURA Leave-In Keratin Hair Treatment',
   slug: 'jenaura-keratin-no-wash-treatment',
   description:
     'Leave-in treatment dengan Hydrolyzed Keratin, Hydrolyzed Silk, dan Argan Oil. Oleskan setelah keramas — tidak perlu dibilas. Rambut terasa lebih lembut dan mudah diatur mulai pemakaian pertama.',
   shortDescription:
-    'Keratin No-Wash Treatment untuk rambut yang bercahaya. Tanpa bilas. Tanpa ribet.',
+    'Leave-In Keratin Hair Treatment untuk rambut yang bercahaya. Tanpa bilas. Tanpa ribet.',
   price: 149000,
   comparePrice: 199000,
   stock: 250,
@@ -192,7 +192,7 @@ export const NAV_LINKS = [
     label: 'Produk',
     href: '/produk/jenaura-keratin-no-wash-treatment',
     children: [
-      { label: 'Keratin No-Wash Treatment', href: '/produk/jenaura-keratin-no-wash-treatment' },
+      { label: 'Leave-In Keratin Hair Treatment', href: '/produk/jenaura-keratin-no-wash-treatment' },
     ],
   },
   { label: 'Cara Pakai', href: '/cara-pakai' },

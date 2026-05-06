@@ -5,7 +5,7 @@ import { HERO_PRODUCT } from '@/lib/mock-data'
 
 export const metadata: Metadata = {
   title: 'Cara Pakai',
-  description: 'Panduan lengkap cara menggunakan JENAURA Keratin No-Wash Treatment. 4 langkah mudah, 2 menit, selesai.',
+  description: 'Panduan lengkap cara menggunakan JENAURA Leave-In Keratin Hair Treatment. 4 langkah mudah, 2 menit, selesai.',
 }
 
 export default function CaraPakaiPage() {

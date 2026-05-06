@@ -89,7 +89,7 @@ export default async function HomePage() {
 
               {/* Subtext */}
               <p className="text-white/65 text-lg sm:text-xl mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-                Keratin No-Wash Treatment yang bantu rambut jadi lebih halus, lembut, dan mudah diatur seketika.
+                Leave-In Keratin Hair Treatment yang bantu rambut jadi lebih halus, lembut, dan mudah diatur seketika.
               </p>
 
               {/* Price Box */}
