@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Payment gateway not configured' }, { status: 500 })
     }
 
-    const baseUrl = request.nextUrl.origin
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || request.nextUrl.origin
     const duitkuUrl = isSandbox
       ? 'https://sandbox.duitku.com/webapi/api/merchant/v2/inquiry'
       : 'https://passport.duitku.com/webapi/api/merchant/v2/inquiry'
@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      callbackUrl: `${baseUrl}/api/payment/callback`,
-      returnUrl: `${baseUrl}/konfirmasi-pesanan?id=${encodeURIComponent(orderNumber)}`,
+      callbackUrl: `${appUrl}/api/payment/callback`,
+      returnUrl: `${appUrl}/konfirmasi-pesanan?id=${encodeURIComponent(orderNumber)}`,
       signature,
       expiryPeriod: 60,
     }
@@ -59,9 +59,12 @@ export async function POST(request: NextRequest) {
     const data = await res.json()
 
     if (!res.ok || data.statusCode !== '00') {
-      console.error('Duitku error:', data)
+      console.error('Duitku error:', JSON.stringify(data))
       return NextResponse.json(
-        { error: data.statusMessage || 'Gagal membuat transaksi pembayaran' },
+        {
+          error: data.statusMessage || 'Gagal membuat transaksi pembayaran',
+          debug: process.env.NODE_ENV !== 'production' ? data : undefined,
+        },
         { status: 400 }
       )
     }
