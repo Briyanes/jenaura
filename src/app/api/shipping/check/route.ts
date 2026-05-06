@@ -64,7 +64,9 @@ export async function POST(request: NextRequest) {
     const { destination_area_id, quantity = 1 } = body
 
     if (!BITESHIP_API_KEY || !ORIGIN_AREA_ID || !destination_area_id) {
-      return NextResponse.json({ success: true, fallback: true, pricing: FLAT_RATES })
+      const reason = !BITESHIP_API_KEY ? 'no_api_key' : !ORIGIN_AREA_ID ? 'no_origin_area_id' : 'no_destination_area_id'
+      console.error('[Biteship] Fallback reason:', reason)
+      return NextResponse.json({ success: true, fallback: true, fallback_reason: reason, pricing: FLAT_RATES })
     }
 
     const res = await fetch('https://api.biteship.com/v1/rates/couriers', {
@@ -90,7 +92,8 @@ export async function POST(request: NextRequest) {
     })
 
     const data = await res.json()
-    if (!data.success) throw new Error('Biteship rates error')
+    console.log('[Biteship] Response success:', data.success, 'status:', res.status)
+    if (!data.success) throw new Error(`Biteship rates error: ${JSON.stringify(data)}`)
 
     const pricing = (data.pricing as BiteshipPricing[])
       .filter((p) => p.available)
@@ -104,7 +107,8 @@ export async function POST(request: NextRequest) {
       }))
 
     return NextResponse.json({ success: true, pricing })
-  } catch {
+  } catch (err) {
+    console.error('[Biteship] Error:', err)
     return NextResponse.json({ success: true, fallback: true, pricing: FLAT_RATES })
   }
 }
