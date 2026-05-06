@@ -113,7 +113,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             {/* Info */}
             <div>
               <p className="text-[10px] font-bold text-jena-gold/60 uppercase tracking-widest mb-3">Hair Treatment</p>
-              <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl text-white font-bold mb-2">{product.name}</h1>
+              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white font-bold mb-2">{product.name}</h1>
               <p className="text-xs text-white/30 mb-4">{product.weight}</p>
 
               <div className="flex items-baseline gap-3 mb-5">
@@ -128,7 +128,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 )}
               </div>
 
-              <p className="text-base text-white/60 leading-relaxed mb-6">{product.description}</p>
+              <p className="text-lg text-white/60 leading-relaxed mb-6">{product.description}</p>
 
               <ProductClientActions product={product} variants={variants} />
 
@@ -153,14 +153,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <section className="py-8 sm:py-10 bg-jena-ivory">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <p className="text-[10px] font-bold text-jena-gold/70 uppercase tracking-widest mb-1">Manfaat</p>
-          <h2 className="font-display text-xl sm:text-2xl text-jena-mocha font-bold mb-4">Kenapa JENAURA?</h2>
+          <h2 className="font-display text-2xl sm:text-3xl text-jena-mocha font-bold mb-4">Kenapa JENAURA?</h2>
           <div className="flex gap-3 overflow-x-auto snap-x scrollbar-hide pb-2 sm:grid sm:grid-cols-2 lg:grid-cols-4">
             {product.benefits.map((benefit, i) => (
               <div key={i} className="w-[70vw] max-w-[240px] flex-shrink-0 snap-start sm:w-auto sm:max-w-none flex items-start gap-2.5 p-3.5 rounded-xl bg-white/70 backdrop-blur-sm border border-jena-peach/50 hover:border-jena-gold/35 transition-colors">
                 <div className="w-5 h-5 rounded-md bg-jena-gold/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Check size={11} className="text-jena-gold" strokeWidth={2.5} />
                 </div>
-                <p className="text-sm text-jena-charcoal/70 leading-relaxed">{benefit}</p>
+                <p className="text-base text-jena-charcoal/70 leading-relaxed">{benefit}</p>
               </div>
             ))}
           </div>
@@ -171,7 +171,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       <section className="py-8 sm:py-10 bg-jena-charcoal">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <p className="text-[10px] font-bold text-jena-gold/60 uppercase tracking-widest mb-1">Bahan Aktif</p>
-          <h2 className="font-display text-xl sm:text-2xl text-white font-bold mb-4">Hero Ingredients</h2>
+          <h2 className="font-display text-2xl sm:text-3xl text-white font-bold mb-4">Hero Ingredients</h2>
           <div className="flex gap-3 overflow-x-auto snap-x scrollbar-hide pb-2 sm:grid sm:grid-cols-3 mb-4">
             {product.heroIngredients.map((ing, i) => {
               const IconComponent = [Sparkles, Droplets, Leaf][i % 3]
@@ -181,14 +181,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     <IconComponent size={18} className="text-jena-gold" />
                   </div>
                   <h3 className="font-display text-base text-white font-bold mb-1">{ing.name}</h3>
-                  <p className="text-sm text-white/40 leading-relaxed">{ing.description}</p>
+                  <p className="text-base text-white/40 leading-relaxed">{ing.description}</p>
                 </div>
               )
             })}
           </div>
           <div className="bg-white/[0.04] border border-white/[0.06] rounded-xl px-4 py-3">
             <span className="text-[10px] font-bold text-white/25 uppercase tracking-widest mr-2">Kandungan:</span>
-            <span className="text-sm text-white/35 leading-relaxed">{product.ingredientList}</span>
+            <span className="text-base text-white/35 leading-relaxed">{product.ingredientList}</span>
           </div>
         </div>
       </section>

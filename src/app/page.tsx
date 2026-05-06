@@ -80,7 +80,7 @@ export default async function HomePage() {
               </div>
 
               {/* Headline */}
-              <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white leading-[1.15] mb-6 font-bold">
+              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.15] mb-6 font-bold">
                 Anti Kusut Sehabis Keramas —{' '}
                 <em className="not-italic text-transparent bg-clip-text bg-gradient-to-r from-jena-gold via-jena-peach to-jena-gold">
                   Rambut Langsung Halus Tanpa Bilas
@@ -88,7 +88,7 @@ export default async function HomePage() {
               </h1>
 
               {/* Subtext */}
-              <p className="text-white/65 text-base sm:text-lg mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+              <p className="text-white/65 text-lg sm:text-xl mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                 Keratin No-Wash Treatment yang bantu rambut jadi lebih halus, lembut, dan mudah diatur seketika.
               </p>
 
@@ -189,10 +189,10 @@ export default async function HomePage() {
           {/* Header */}
           <div className="text-center max-w-2xl mx-auto mb-8">
             <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-3 font-bold">Masalah Rambut</p>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white mb-4 font-bold">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white mb-4 font-bold">
               Masih <span className="text-jena-gold">Kesat</span> Sehabis Keramas?
             </h2>
-            <p className="text-base text-white/40 max-w-lg mx-auto leading-relaxed">
+            <p className="text-lg text-white/40 max-w-lg mx-auto leading-relaxed">
               6 masalah rambut yang sering diabaikan — semuanya bisa diatasi.
             </p>
           </div>
@@ -214,7 +214,7 @@ export default async function HomePage() {
                 <div className="w-10 h-10 rounded-xl bg-jena-gold/10 border border-jena-gold/20 flex items-center justify-center flex-shrink-0 group-hover:bg-jena-gold/20 transition-colors">
                   <item.icon size={16} className="text-jena-gold" />
                 </div>
-                <p className="text-base font-medium text-white/70 group-hover:text-white/90 transition-colors">{item.text}</p>
+                <p className="text-lg font-medium text-white/70 group-hover:text-white/90 transition-colors">{item.text}</p>
               </div>
             ))}
           </div>
@@ -226,7 +226,7 @@ export default async function HomePage() {
                 <Sparkles size={15} />
                 Solusi: JENAURA dalam 2 Menit
               </div>
-              <p className="text-base text-white/40 max-w-md leading-relaxed">
+              <p className="text-lg text-white/40 max-w-md leading-relaxed">
                 <span className="font-semibold text-white/70">Leave-in treatment profesional</span> — tanpa bilas, tanpa ribet, hasilnya langsung terasa.
               </p>
             </div>
@@ -242,11 +242,11 @@ export default async function HomePage() {
           {/* Header */}
           <div className="text-center max-w-2xl mx-auto mb-8">
             <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">Cara Pakai</p>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-jena-mocha mb-4 font-bold">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-jena-mocha mb-4 font-bold">
               4 Langkah,{' '}
               <span className="text-jena-gold">2 Menit</span>
             </h2>
-            <p className="text-base text-jena-mocha/50 max-w-md mx-auto">Semudah skincare routine — tanpa bilas, tanpa ribet.</p>
+            <p className="text-lg text-jena-mocha/50 max-w-md mx-auto">Semudah skincare routine — tanpa bilas, tanpa ribet.</p>
           </div>
 
           {/* Steps — horizontal on desktop, vertical on mobile */}
@@ -271,7 +271,7 @@ export default async function HomePage() {
                       </div>
                     </div>
                     <p className="text-[11px] font-bold text-jena-mocha/40 uppercase tracking-widest mb-2">Langkah {i + 1}</p>
-                    <p className="text-base text-jena-charcoal/75 leading-relaxed">{step}</p>
+                    <p className="text-lg text-jena-charcoal/75 leading-relaxed">{step}</p>
                   </div>
                 </div>
               )
@@ -296,10 +296,10 @@ export default async function HomePage() {
         <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-3 font-bold">Pilih Paket</p>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white mb-4 font-bold">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white mb-4 font-bold">
               Mulai dari <span className="text-jena-gold">{formatRupiah(product.price)}</span>
             </h2>
-            <p className="text-base text-white/40">Hemat lebih banyak dengan paket bundling.</p>
+            <p className="text-lg text-white/40">Hemat lebih banyak dengan paket bundling.</p>
           </div>
           <PricingCarousel {...carouselProps} />
         </div>
@@ -312,10 +312,10 @@ export default async function HomePage() {
         <div className="relative max-w-3xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">FAQ</p>
-            <h2 className="font-display text-3xl sm:text-4xl text-jena-mocha mb-4 font-bold">
+            <h2 className="font-display text-4xl sm:text-5xl text-jena-mocha mb-4 font-bold">
               Pertanyaan Umum
             </h2>
-            <p className="text-base text-jena-mocha/50">Semua yang perlu kamu tahu sebelum membeli.</p>
+            <p className="text-lg text-jena-mocha/50">Semua yang perlu kamu tahu sebelum membeli.</p>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -328,7 +328,7 @@ export default async function HomePage() {
                   </div>
                 </summary>
                 <div className="px-5 pb-5 border-t border-jena-peach/40">
-                  <p className="text-base text-jena-charcoal/60 leading-relaxed pt-4">{faq.answer}</p>
+                  <p className="text-lg text-jena-charcoal/60 leading-relaxed pt-4">{faq.answer}</p>
                 </div>
               </details>
             ))}
@@ -360,7 +360,7 @@ export default async function HomePage() {
                 <Heart size={12} />
                 Hair Treatment At Home
               </div>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white mb-4 font-bold leading-tight">
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white mb-4 font-bold leading-tight">
                 <span className="text-jena-gold">Anti-Kesat Sehabis Keramas,</span><br />
                 Tanpa Bilas!
               </h2>

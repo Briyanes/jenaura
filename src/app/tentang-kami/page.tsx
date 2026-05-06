@@ -15,7 +15,7 @@ export default function TentangKamiPage() {
         <div className="absolute top-0 right-0 w-72 h-72 bg-jena-gold/8 rounded-full blur-[100px] pointer-events-none" />
         <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 relative header-pt-page">
           <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">Cerita Kami</p>
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-6xl text-white font-bold max-w-xl">Tentang <span className="text-jena-gold">JENAURA</span></h1>
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white font-bold max-w-xl">Tentang <span className="text-jena-gold">JENAURA</span></h1>
         </div>
       </section>
 
@@ -25,7 +25,7 @@ export default function TentangKamiPage() {
           <div className="lg:grid lg:grid-cols-2 lg:gap-16 lg:items-start">
 
             {/* Text */}
-            <div className="space-y-4 text-base text-jena-charcoal/65 leading-relaxed mb-8 lg:mb-0">
+            <div className="space-y-4 text-lg text-jena-charcoal/65 leading-relaxed mb-8 lg:mb-0">
               <p><strong className="text-jena-mocha">JENAURA</strong> lahir dari pertanyaan sederhana: mengapa perawatan rambut profesional harus selalu dilakukan di salon?</p>
               <p>Kami percaya setiap wanita Indonesia berhak merasakan rambut sehat, bercahaya, dan mudah diatur — tanpa biaya mahal atau waktu berjam-jam di salon.</p>
               <p>Itulah mengapa kami menciptakan <strong className="text-jena-mocha">JENAURA Keratin No-Wash Treatment</strong> — leave-in treatment dengan bahan premium: Hydrolyzed Keratin, Hydrolyzed Silk, dan Argan Oil. Tanpa bilas. Hasilnya terasa mulai pemakaian pertama.</p>
@@ -44,7 +44,7 @@ export default function TentangKamiPage() {
                   </div>
                   <div className="text-center lg:text-left">
                     <h3 className="font-semibold text-jena-mocha text-sm mb-1">{title}</h3>
-                    <p className="text-sm text-jena-charcoal/55 leading-relaxed">{desc}</p>
+                    <p className="text-base text-jena-charcoal/55 leading-relaxed">{desc}</p>
                   </div>
                 </div>
               ))}
@@ -64,7 +64,7 @@ export default function TentangKamiPage() {
               { num: '30+', label: 'Kota' },
             ].map(({ num, label }) => (
               <div key={label} className="bg-white/[0.05] border border-white/[0.08] rounded-2xl p-5 lg:py-8 hover:border-jena-gold/30 transition-colors">
-                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-jena-gold">{num}</p>
+                <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-jena-gold">{num}</p>
                 <p className="text-sm text-white/40 mt-1">{label}</p>
               </div>
             ))}
@@ -75,7 +75,7 @@ export default function TentangKamiPage() {
       {/* CTA */}
       <section className="py-8 lg:py-14 bg-jena-ivory">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between">
-          <p className="text-jena-mocha/60 text-base mb-4 lg:mb-0 text-center lg:text-left">Rasakan perbedaannya mulai hari ini.</p>
+          <p className="text-jena-mocha/60 text-lg mb-4 lg:mb-0 text-center lg:text-left">Rasakan perbedaannya mulai hari ini.</p>
           <Link href="/checkout" className="flex items-center justify-center gap-2 bg-gradient-to-r from-jena-gold to-jena-gold-dark text-white px-8 py-3.5 rounded-full text-sm font-bold shadow-xl shadow-jena-gold/25 hover:scale-105 transition-all duration-300 lg:inline-flex lg:w-auto">
             Coba JENAURA Sekarang <ArrowRight size={15} />
           </Link>

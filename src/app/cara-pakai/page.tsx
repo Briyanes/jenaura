@@ -23,10 +23,10 @@ export default function CaraPakaiPage() {
             <Clock size={12} />
             2 Menit Selesai
           </div>
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl text-white mb-4 font-bold">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl text-white mb-4 font-bold">
             Cara Pakai <span className="text-jena-gold">JENAURA</span>
           </h1>
-          <p className="text-white/50 text-base max-w-md mx-auto leading-relaxed">
+          <p className="text-white/50 text-lg max-w-md mx-auto leading-relaxed">
             4 langkah sederhana untuk rambut bercahaya. Tanpa bilas, tanpa ribet.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function CaraPakaiPage() {
                           </div>
                           <span className="text-[10px] font-bold text-jena-gold/70 uppercase tracking-widest">{stepLabels[i]}</span>
                         </div>
-                        <p className="text-base text-jena-charcoal/75 leading-relaxed">{step}</p>
+                        <p className="text-lg text-jena-charcoal/75 leading-relaxed">{step}</p>
                       </div>
                     </div>
                   </div>
@@ -94,7 +94,7 @@ export default function CaraPakaiPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-jena-gold text-xs tracking-[0.25em] uppercase font-bold">Pro Tips</p>
-              <h2 className="font-display text-xl sm:text-2xl text-jena-mocha font-bold">Tips Hasil Optimal</h2>
+              <h2 className="font-display text-2xl sm:text-3xl text-jena-mocha font-bold">Tips Hasil Optimal</h2>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -110,7 +110,7 @@ export default function CaraPakaiPage() {
                 <div className="w-7 h-7 rounded-lg bg-jena-gold/10 flex items-center justify-center flex-shrink-0 group-hover:bg-jena-gold/20 transition-colors">
                   <Icon size={13} className="text-jena-gold" />
                 </div>
-                <p className="text-sm text-jena-charcoal/70 leading-tight">{tip}</p>
+                <p className="text-base text-jena-charcoal/70 leading-tight">{tip}</p>
               </div>
             ))}
           </div>
@@ -120,8 +120,8 @@ export default function CaraPakaiPage() {
       {/* CTA */}
       <section className="py-8 sm:py-10 bg-gradient-to-br from-jena-mocha to-jena-charcoal">
         <div className="relative max-w-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-display text-2xl sm:text-3xl text-white mb-3 font-bold">Siap Mulai Perawatan?</h2>
-          <p className="text-white/40 text-base mb-7">Rambut bercahaya dimulai dari langkah pertama.</p>
+          <h2 className="font-display text-3xl sm:text-4xl text-white mb-3 font-bold">Siap Mulai Perawatan?</h2>
+          <p className="text-white/40 text-lg mb-7">Rambut bercahaya dimulai dari langkah pertama.</p>
           <Link href="/checkout" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-jena-gold to-jena-gold-dark text-white px-8 py-3.5 rounded-full text-sm font-bold shadow-xl shadow-jena-gold/25 hover:scale-105 transition-all duration-300">
             Beli JENAURA Sekarang <ArrowRight size={15} />
           </Link>

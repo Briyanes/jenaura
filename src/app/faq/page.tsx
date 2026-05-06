@@ -18,7 +18,7 @@ export default function FAQPage() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-jena-gold/8 rounded-full blur-[90px] pointer-events-none" />
         <div className="max-w-2xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative header-pt-page">
           <p className="text-jena-gold text-xs tracking-[0.25em] uppercase mb-4 font-bold">Pertanyaan Umum</p>
-          <h1 className="font-display text-3xl sm:text-4xl text-white font-bold">FAQ</h1>
+          <h1 className="font-display text-4xl sm:text-5xl text-white font-bold">FAQ</h1>
         </div>
       </section>
 
@@ -41,7 +41,7 @@ export default function FAQPage() {
                         </div>
                       </summary>
                       <div className="px-5 pb-5 border-t border-jena-peach/40">
-                        <p className="text-base text-jena-charcoal/60 leading-relaxed pt-4">{faq.answer}</p>
+                        <p className="text-lg text-jena-charcoal/60 leading-relaxed pt-4">{faq.answer}</p>
                       </div>
                     </details>
                   ))}
