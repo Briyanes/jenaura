@@ -214,7 +214,7 @@ export default async function HomePage() {
                 <div className="w-10 h-10 rounded-xl bg-jena-gold/10 border border-jena-gold/20 flex items-center justify-center flex-shrink-0 group-hover:bg-jena-gold/20 transition-colors">
                   <item.icon size={16} className="text-jena-gold" />
                 </div>
-                <p className="text-lg font-medium text-white/70 group-hover:text-white/90 transition-colors">{item.text}</p>
+                <p className="text-sm sm:text-base lg:text-lg font-medium text-white/70 group-hover:text-white/90 transition-colors">{item.text}</p>
               </div>
             ))}
           </div>
@@ -261,17 +261,20 @@ export default async function HomePage() {
                     <div className="hidden lg:block absolute top-10 left-[calc(100%_-_12px)] w-6 h-px bg-jena-gold/25 z-10" />
                   )}
                   <div className="bg-white/70 backdrop-blur-sm border border-jena-peach/60 rounded-2xl p-4 sm:p-6 h-full hover:border-jena-gold/40 hover:shadow-lg hover:shadow-jena-gold/8 hover:-translate-y-1 transition-all duration-300">
-                    {/* Number + Icon */}
-                    <div className="flex items-center gap-3 mb-3 sm:mb-5">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-jena-gold to-jena-gold-dark flex items-center justify-center text-white font-bold text-base shadow-md shadow-jena-gold/25 flex-shrink-0">
+                    {/* Row 1: Icon + Label | Number */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-jena-gold/10 flex items-center justify-center flex-shrink-0">
+                          <IconComponent size={14} className="text-jena-gold" />
+                        </div>
+                        <p className="text-[10px] sm:text-[11px] font-bold text-jena-mocha/40 uppercase tracking-widest">Langkah {i + 1}</p>
+                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-jena-gold to-jena-gold-dark flex items-center justify-center text-white font-bold text-base shadow-md shadow-jena-gold/25 flex-shrink-0">
                         {i + 1}
                       </div>
-                      <div className="w-8 h-8 rounded-lg bg-jena-gold/10 flex items-center justify-center">
-                        <IconComponent size={15} className="text-jena-gold" />
-                      </div>
                     </div>
-                    <p className="text-[11px] font-bold text-jena-mocha/40 uppercase tracking-widest mb-2">Langkah {i + 1}</p>
-                    <p className="text-lg text-jena-charcoal/75 leading-relaxed">{step}</p>
+                    {/* Row 2: Description */}
+                    <p className="text-sm sm:text-base lg:text-lg text-jena-charcoal/75 leading-relaxed">{step}</p>
                   </div>
                 </div>
               )
