@@ -20,7 +20,7 @@ export default function ProductClientActions({ product, variants }: { product: P
     <div className="space-y-4">
       {/* Variant Selection */}
       <div>
-        <p className="text-sm font-semibold text-jena-charcoal mb-3">Pilih Paket:</p>
+        <p className="text-sm font-semibold text-white/70 mb-3">Pilih Paket:</p>
         <div className="space-y-2">
           {variants.map((variant, i) => (
             <button
@@ -28,24 +28,24 @@ export default function ProductClientActions({ product, variants }: { product: P
               onClick={() => setSelectedVariant(i)}
               className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all text-left ${
                 selectedVariant === i
-                  ? 'border-jena-gold bg-jena-gold/5'
-                  : 'border-jena-gray-light bg-white hover:border-jena-gold/30'
+                  ? 'border-jena-gold bg-white shadow-md shadow-jena-gold/15'
+                  : 'border-white/10 bg-white/8 hover:border-jena-gold/30 hover:bg-white/12'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                  selectedVariant === i ? 'border-jena-gold bg-jena-gold' : 'border-jena-gray-medium'
+                  selectedVariant === i ? 'border-jena-gold bg-jena-gold' : 'border-white/30'
                 }`}>
                   {selectedVariant === i && <Check size={12} className="text-white" strokeWidth={3} />}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-jena-charcoal">{variant.name}</p>
+                  <p className={`text-sm font-medium ${selectedVariant === i ? 'text-jena-charcoal' : 'text-white/80'}`}>{variant.name}</p>
                   {variant.saveAmount > 0 && (
                     <p className="text-xs text-jena-terracotta font-semibold">Hemat {formatRupiah(variant.saveAmount)}</p>
                   )}
                 </div>
               </div>
-              <p className="text-sm font-bold text-jena-mocha">{formatRupiah(variant.price)}</p>
+              <p className={`text-sm font-bold ${selectedVariant === i ? 'text-jena-mocha' : 'text-white/60'}`}>{formatRupiah(variant.price)}</p>
             </button>
           ))}
         </div>
