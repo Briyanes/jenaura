@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { updateOrderPayment } from '@/lib/db'
 
-// Duitku payment channel codes (must be enabled in Duitku merchant dashboard)
+// Duitku payment channel codes (from getpaymentmethod API)
 const PAYMENT_METHOD_MAP: Record<string, string> = {
-  bank_transfer: 'BRI', // BRI Virtual Account
-  qris: 'QRIS',         // QRIS
-  ewallet: 'OV',        // OVO
-  cod: '',              // COD - skip Duitku
+  bank_transfer: 'BR',   // BRI VA (BRIVA)
+  qris: 'SP',            // ShopeePay QRIS
+  ewallet: 'DA',         // DANA
+  cod: '',               // COD - skip Duitku
 }
 
 export async function POST(request: NextRequest) {
