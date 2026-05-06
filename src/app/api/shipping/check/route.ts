@@ -95,7 +95,8 @@ export async function POST(request: NextRequest) {
     console.log('[Biteship] Response success:', data.success, 'status:', res.status)
     if (!data.success) throw new Error(`Biteship rates error: ${JSON.stringify(data)}`)
 
-    const pricing = (data.pricing as BiteshipPricing[])
+    const allPricing = (data.pricing as BiteshipPricing[])
+    const pricing = allPricing
       .filter((p) => p.available)
       .sort((a, b) => a.price - b.price)
       .slice(0, 5)
@@ -105,6 +106,15 @@ export async function POST(request: NextRequest) {
         price: p.price,
         estimate: `${p.duration} hari`,
       }))
+
+    if (!pricing.length) {
+      return NextResponse.json({ 
+        success: true, fallback: true, fallback_reason: 'no_available_rates',
+        debug_total: allPricing.length,
+        debug_sample: allPricing.slice(0, 2),
+        pricing: FLAT_RATES 
+      })
+    }
 
     return NextResponse.json({ success: true, pricing })
   } catch (err) {
