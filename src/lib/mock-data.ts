@@ -188,7 +188,7 @@ export const SOCIAL_LINKS = {
   tiktok: 'https://tiktok.com/@jenaura.id',
   youtube: 'https://youtube.com/@jenaura_id',
   facebook: 'https://facebook.com/jenauraofficialid',
-  whatsapp: 'https://wa.me/6281234567890',
+  whatsapp: 'https://wa.me/6281231600479',
 }
 
 export const NAV_LINKS = [
