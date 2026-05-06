@@ -108,7 +108,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, pricing })
   } catch (err) {
-    console.error('[Biteship] Error:', err)
-    return NextResponse.json({ success: true, fallback: true, pricing: FLAT_RATES })
+    const errMsg = err instanceof Error ? err.message : String(err)
+    console.error('[Biteship] Error:', errMsg)
+    return NextResponse.json({ success: true, fallback: true, fallback_reason: 'api_error', error_debug: errMsg, pricing: FLAT_RATES })
   }
 }
