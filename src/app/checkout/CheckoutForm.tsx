@@ -263,7 +263,10 @@ export default function CheckoutForm({ variants, productName }: Props) {
         throw new Error(msg)
       }
 
-      const orderId = data.order?.order_number || 'PENDING'
+      const orderId = data.order?.order_number
+      if (!orderId) {
+        throw new Error('Gagal mendapatkan nomor pesanan. Silakan coba lagi.')
+      }
       trackPurchase({
         orderId,
         productId: HERO_PRODUCT.id,

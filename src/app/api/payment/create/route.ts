@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { orderNumber, amount, customerName, customerPhone, paymentMethod } = body
 
+    console.log('Payment create:', { orderNumber, amount, paymentMethod })
+
     if (!orderNumber || !amount || !customerName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }

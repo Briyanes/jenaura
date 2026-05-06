@@ -193,9 +193,16 @@ export async function updateOrderPayment(orderNumber: string, reference: string)
     .update({ midtrans_transaction_id: reference, updated_at: new Date().toISOString() })
     .eq('order_number', orderNumber)
     .select()
-    .single()
+    .maybeSingle()
 
-  if (error) throw error
+  if (error) {
+    console.error('updateOrderPayment error for', orderNumber, JSON.stringify(error))
+    // Non-blocking: payment URL is more important than saving reference
+    return null
+  }
+  if (!data) {
+    console.warn('updateOrderPayment: no order found for', orderNumber)
+  }
   return data
 }
 
