@@ -95,8 +95,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Store Duitku reference in order
-    await updateOrderPayment(orderNumber, data.reference as string)
+    console.log('Duitku success response keys:', Object.keys(data), 'reference:', data.reference)
+
+    // Store Duitku reference in order (non-blocking)
+    await updateOrderPayment(orderNumber, (data.reference as string) || (data.merchantOrderId as string) || orderNumber)
 
     return NextResponse.json({
       paymentUrl: data.paymentUrl,
